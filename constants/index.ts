@@ -1,0 +1,31 @@
+// Импорт цен (для калькулятора)
+export { PRICING } from './pricing';
+
+// Импорт товаров по категориям
+import { BELTS } from './products/belts';
+import { WALLETS } from './products/wallets';
+import { COMPACT } from './products/compact';
+import { HOME } from './products/home';
+import { BAGS } from './products/bags';
+import { WATCH_STRAPS } from './products/watch_straps';
+import { ACCESSORIES } from './products/accessories';
+import { EXCLUSIVE } from './products/exclusive';
+import { GIFT_SETS } from './products/gift_sets';
+import { CARE } from './products/care';
+
+// Экспорт отдельных категорий (для секций на главной, типа CareSection)
+export { BELTS, WALLETS, COMPACT, HOME, BAGS, WATCH_STRAPS, ACCESSORIES, EXCLUSIVE, GIFT_SETS, CARE };
+
+// ГЛАВНЫЙ ЭКСПОРТ: Все товары вместе для каталога
+export const PRODUCTS = [
+  ...BELTS,
+  ...WALLETS,
+  ...COMPACT,
+  ...HOME,
+  ...BAGS,
+  ...WATCH_STRAPS,
+  ...ACCESSORIES,
+  ...EXCLUSIVE,
+  ...GIFT_SETS,
+  ...CARE, // <-- Уходовые средства тоже в общем списке
+];
