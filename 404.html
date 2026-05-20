@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Redirecting...</title>
+  <script>
+    // Перенаправляем на главную, сохраняя путь в hash для React
+    const path = window.location.pathname;
+    if (path && path !== '/') {
+      window.location.replace('/#' + path);
+    } else {
+      window.location.replace('/');
+    }
+  </script>
+</head>
+<body>
+  <p>Перенаправление...</p>
+</body>
+</html>
