@@ -3,6 +3,20 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <!-- Основные SEO -->
+    <meta name="description" content="Мастерская BSV Leather. Ремни, кошельки, сумки и аксессуары из натуральной кожи. Индивидуальный пошив, каталог работ, контакты." />
+    <meta name="keywords" content="кожа, ручная работа, ремень, кошелёк, сумка, мастерская, bsv leather, пошив кожи" />
+    <meta name="robots" content="index, follow" />
+    
+    <!-- Open Graph (для соцсетей) -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://bsvleather.ru/" />
+    <meta property="og:title" content="BSV Leather — изделия из кожи ручной работы" />
+    <meta property="og:description" content="Мастерская BSV Leather. Ремни, кошельки, сумки из натуральной кожи." />
+    <meta property="og:image" content="https://bsvleather.ru/og-image.jpg" />
+    <meta property="og:locale" content="ru_RU" />
+    
     <title>BSV Leather | Кожаная мастерская Воронеж | Ремни, Кошельки и Подарки на заказ</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -82,11 +96,30 @@
 }
 </script>
 <link rel="stylesheet" href="/index.css">
+<link rel="canonical" href="https://bsvleather.ru/" />
 <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "LocalBusiness",
+  "name": "BSV Leather",
+  "description": "Мастерская по изготовлению изделий из кожи ручной работы",
+  "url": "https://bsvleather.ru",
+  "telephone": "",
+  "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "Воронеж",
+    "addressCountry": "RU"
+  },
+  "priceRange": "₽₽",
+  "image": "https://bsvleather.ru/og-image.jpg"
+}
+</script>
+  
 </head>
   <body class="bg-white text-leather-900 font-sans antialiased">
     <div id="root"></div>
-    <script type="module" src="./index.tsx"></script>
   <script type="module" src="/index.tsx"></script>
 </body>
 </html>
