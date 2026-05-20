@@ -71,14 +71,14 @@ export const ProductGrid: React.FC<ProductGridProps> = ({
           </div>
         </div>
           
-        {/* Categories - Horizontal Scroll on Mobile */}
-        <div className="relative mb-12">
-          <div className="flex overflow-x-auto pb-4 hide-scrollbar gap-2 md:gap-4 md:flex-wrap md:justify-center px-4 md:px-0 -mx-4 md:mx-0 snap-x">
+        {/* Categories - Wrapped on mobile, centered on desktop */}
+        <div className="mb-12">
+          <div className="flex flex-wrap justify-center gap-2 md:gap-4">
             {[ProductCategory.ALL, ProductCategory.BELTS, ProductCategory.WALLETS, ProductCategory.COMPACT, ProductCategory.HOME].map((category) => (
               <button
                 key={category}
                 onClick={() => setActiveCategory(category)}
-                className={`flex-shrink-0 snap-start px-5 py-2 rounded-full text-xs md:text-sm uppercase tracking-wider transition-all duration-300 border ${
+                className={`px-4 py-2 rounded-full text-xs md:text-sm uppercase tracking-wider transition-all duration-300 border whitespace-nowrap ${
                   activeCategory === category 
                     ? 'bg-leather-800 text-white border-leather-800 shadow-md' 
                     : 'bg-white text-leather-600 border-leather-200 hover:border-leather-400 hover:bg-leather-50'
@@ -88,8 +88,6 @@ export const ProductGrid: React.FC<ProductGridProps> = ({
               </button>
             ))}
           </div>
-          <div className="md:hidden absolute right-0 top-0 bottom-4 w-8 bg-gradient-to-l from-white to-transparent pointer-events-none"></div>
-          <div className="md:hidden absolute left-0 top-0 bottom-4 w-8 bg-gradient-to-r from-white to-transparent pointer-events-none"></div>
         </div>
 
         {/* Grid */}
