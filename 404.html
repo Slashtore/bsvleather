@@ -4,16 +4,17 @@
   <meta charset="UTF-8">
   <title>Redirecting...</title>
   <script>
-    // Перенаправляем на главную, сохраняя путь в hash для React
-    const path = window.location.pathname;
-    if (path && path !== '/') {
-      window.location.replace('/#' + path);
+    // Сохраняем текущий путь
+    var path = window.location.pathname.substring(1); // убираем первый слеш
+    // Перенаправляем на главную с хешем
+    if (path) {
+      window.location.href = '/#' + path;
     } else {
-      window.location.replace('/');
+      window.location.href = '/';
     }
   </script>
 </head>
 <body>
-  <p>Перенаправление...</p>
+  <p>Loading...</p>
 </body>
 </html>
