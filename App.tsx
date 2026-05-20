@@ -50,9 +50,16 @@ function App() {
     }
   }, [cartItems]);
 
-  // 🔥 ПРОВЕРКА АДРЕСА: если в строке браузера /calc → показываем калькулятор
+  // 🔥 ПРОВЕРКА: сначала смотрим, не редирект ли с 404, потом — прямой адрес
   useEffect(() => {
-    if (window.location.pathname === '/calc') {
+    const restorePath = sessionStorage.getItem('restorePath');
+    
+    if (restorePath === '/calc') {
+      setCurrentView('calc');
+      sessionStorage.removeItem('restorePath'); // чистим, чтобы не сбивать потом
+    } 
+    // Фолбэк для локальной разработки (когда 404.html не используется)
+    else if (window.location.pathname === '/calc') {
       setCurrentView('calc');
     }
   }, []);

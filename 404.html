@@ -2,19 +2,12 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <title>Redirecting...</title>
   <script>
-    // Сохраняем текущий путь
-    var path = window.location.pathname.substring(1); // убираем первый слеш
-    // Перенаправляем на главную с хешем
-    if (path) {
-      window.location.href = '/#' + path;
-    } else {
-      window.location.href = '/';
-    }
+    // Запоминаем путь ДО редиректа
+    sessionStorage.setItem('restorePath', window.location.pathname);
+    // Перекидываем на главную, чтобы загрузился React
+    window.location.replace('/');
   </script>
 </head>
-<body>
-  <p>Loading...</p>
-</body>
+<body></body>
 </html>
