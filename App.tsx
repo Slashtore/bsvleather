@@ -64,6 +64,29 @@ function App() {
     }
   }, []);
 
+  // 🔥 Обработчик хэша для каталога (#catalog)
+  useEffect(() => {
+    const handleHashScroll = () => {
+      const hash = window.location.hash.replace('#', '');
+      
+      if (hash === 'catalog') {
+        if (currentView !== 'catalog') {
+          setCurrentView('catalog');
+        }
+        setTimeout(() => {
+          const el = document.getElementById('catalog');
+          if (el) {
+            el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        }, 150);
+      }
+    };
+
+    handleHashScroll();
+    window.addEventListener('hashchange', handleHashScroll);
+    return () => window.removeEventListener('hashchange', handleHashScroll);
+  }, [currentView]);
+
   // State to pass data to the Contact Form
   const [contactPrefill, setContactPrefill] = useState<{type: string, message: string} | null>(null);
 
