@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Star, Quote } from 'lucide-react';
 
 interface TestimonialsProps {
@@ -9,29 +9,61 @@ export const Testimonials: React.FC<TestimonialsProps> = ({ onBecomeClient }) =>
   const reviews = [
     {
       id: 1,
-      name: "Александр В.",
-      product: "Ремень 'Генерал'",
-      text: "Качество просто космос. Кожа толстая, пахнет настоящим ремеслом. Ношу уже полгода, стал только красивее. Отдельное спасибо за упаковку!",
+      name: "Александр К.",
+      product: "Ремень \"Классический\" (коричневый)",
+      text: "Кожа плотная, с приятным матовым финишем. Ношу каждый день уже 4 месяца — потёртостей нет, только благородная патина. Пряжка держит чётко, не люфтит.",
       rating: 5,
       date: "12 октября 2023"
     },
     {
       id: 2,
-      name: "Елена С.",
-      product: "Сумка-тоут",
-      text: "Заказывала мужу в подарок. Он в восторге! Очень переживала за цвет, но мастер прислал фото кожи перед пошивом. Сервис на высоте.",
+      name: "Людмила К.",
+      product: "Ремень \"Классический\" (красный)",
+      text: "Заказывала яркий красный ремень в подарок. Боялась, что будет выглядеть вызывающе, но оттенок получился глубоким и благородным. Упаковка с сургучом — выглядит очень статусно.",
       rating: 5,
       date: "05 сентября 2023"
     },
     {
       id: 3,
-      name: "Дмитрий К.",
-      product: "Картхолдер 'Слим'",
-      text: "Искал именно такой минимализм. Ничего лишнего, швы идеальные, в кармане не чувствуется. Рекомендую всем, кто ценит ручную работу.",
+      name: "Ольга Б.",
+      product: "Футляр для очков",
+      text: "Футляр превзошёл ожидания. Выбрали кожу с необычным тиснением, внутри мягкий велюр. Очки больше не царапаются в сумке, а сам футляр стал самостоятельным аксессуаром.",
       rating: 5,
       date: "20 ноября 2023"
+    },
+    {
+      id: 4,
+      name: "Антон В.",
+      product: "Бифолд (коньяк)",
+      text: "Бифолд коньячного оттенка — это вещь. Швы ровные, карта входит плотно, но достаётся легко. Кожа со временем становится только мягче и темнее. Спасибо за оперативность.",
+      rating: 5,
+      date: "14 января 2024"
     }
   ];
+
+  const carouselItems = [...reviews.slice(-2), ...reviews, ...reviews.slice(0, 3)];
+  
+  const [currentIndex, setCurrentIndex] = useState(2);
+  const [isPaused, setIsPaused] = useState(false);
+  const [disableTransition, setDisableTransition] = useState(false);
+
+  useEffect(() => {
+    if (isPaused) return;
+    const timer = setInterval(() => {
+      setCurrentIndex(prev => prev + 1);
+    }, 5000);
+    return () => clearInterval(timer);
+  }, [isPaused]);
+
+  const handleTransitionEnd = () => {
+    if (currentIndex >= carouselItems.length - 3) {
+      setDisableTransition(true);
+      setTimeout(() => {
+        setCurrentIndex(2);
+        setTimeout(() => setDisableTransition(false), 50);
+      }, 50);
+    }
+  };
 
   return (
     <section className="py-24 bg-leather-50 border-t border-leather-200">
@@ -43,34 +75,54 @@ export const Testimonials: React.FC<TestimonialsProps> = ({ onBecomeClient }) =>
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {reviews.map((review) => (
-            <div key={review.id} className="bg-white p-8 rounded-sm shadow-sm hover:shadow-lg transition-shadow duration-300 relative border border-leather-200 flex flex-col h-full">
-              <div className="absolute top-6 right-8 text-leather-200">
-                <Quote size={48} className="transform rotate-180" />
-              </div>
-              
-              <div className="flex gap-1 mb-4 text-yellow-500">
-                {[...Array(review.rating)].map((_, i) => (
-                  <Star key={i} size={16} fill="currentColor" />
-                ))}
-              </div>
+        {/* 🔥 Контейнер: строгий overflow-hidden, без padding/margin хаков */}
+        <div className="relative overflow-hidden min-h-[420px]">
+          <div
+            className="flex"
+            style={{
+              transform: `translateX(-${currentIndex * 33.333}%)`,
+              transition: disableTransition ? 'none' : 'transform 0.7s ease-in-out'
+            }}
+            onTransitionEnd={handleTransitionEnd}
+          >
+            {carouselItems.map((review, idx) => (
+              <div 
+                key={`${review.id}-${idx}`}
+                // 🔥 КЛЮЧ: w-1/3 (ровно 33.333%) + px-4 создаёт отступы ВНУТРИ ширины
+                className="w-1/3 flex-shrink-0 px-4"
+              >
+                <div 
+                  className="bg-white p-8 rounded-sm shadow-sm hover:shadow-lg transition-shadow duration-300 relative border border-leather-200 flex flex-col h-full"
+                  // 🔥 Фикс размытия границ при анимации
+                  style={{ backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden' }}
+                >
+                  <div className="absolute top-6 right-8 text-leather-200">
+                    <Quote size={48} className="transform rotate-180" />
+                  </div>
+                  
+                  <div className="flex gap-1 mb-4 text-yellow-500">
+                    {[...Array(review.rating)].map((_, i) => (
+                      <Star key={i} size={16} fill="currentColor" />
+                    ))}
+                  </div>
 
-              <p className="text-leather-800 leading-relaxed mb-6 flex-grow italic">
-                "{review.text}"
-              </p>
+                  <p className="text-leather-800 leading-relaxed mb-6 flex-grow italic">
+                    "{review.text}"
+                  </p>
 
-              <div className="mt-auto pt-6 border-t border-leather-200">
-                <div className="flex justify-between items-end">
-                    <div>
-                        <p className="font-serif text-leather-900 font-bold text-lg">{review.name}</p>
-                        <p className="text-xs text-leather-500 uppercase tracking-wider mt-1">{review.product}</p>
+                  <div className="mt-auto pt-6 border-t border-leather-200">
+                    <div className="flex justify-between items-end">
+                        <div>
+                            <p className="font-serif text-leather-900 font-bold text-lg">{review.name}</p>
+                            <p className="text-xs text-leather-500 uppercase tracking-wider mt-1">{review.product}</p>
+                        </div>
+                        <span className="text-xs text-leather-400">{review.date}</span>
                     </div>
-                    <span className="text-xs text-leather-400">{review.date}</span>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
         
         <div className="text-center mt-12">
