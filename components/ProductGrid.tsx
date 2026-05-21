@@ -96,7 +96,10 @@ export const ProductGrid: React.FC<ProductGridProps> = ({
             <ProductCard 
               key={product.id} 
               product={product} 
-              onSelect={setSelectedProduct}
+              onSelect={(product) => {
+                setSelectedProduct(product);
+                setActiveImageIdx(0);
+              }}
               onAddToCart={() => onAddToCart(product)}
             />
           ))}
