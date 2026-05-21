@@ -152,6 +152,13 @@ function App() {
   const navigateTo = (view: ViewState, sectionId?: string) => {
     setCurrentView(view);
     window.scrollTo(0, 0);
+
+    // Если идём на главную — очищаем хэш, чтобы не срабатывал авто-редирект в каталог
+    if (view === 'home') {
+      if (window.location.hash) {
+        history.replaceState(null, '', window.location.pathname + window.location.search);
+      }
+    }
     
     // If navigating to a section on home page
     if (view === 'home' && sectionId) {
