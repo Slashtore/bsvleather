@@ -50,7 +50,7 @@ export const ProductGrid: React.FC<ProductGridProps> = ({
   };
 
   return (
-    <section className="py-24 bg-white min-h-screen">
+    <section id="catalog" className="py-24 bg-white min-h-screen">
       <div className="container mx-auto px-6">
         
         {/* Header of the Catalog Page */}
