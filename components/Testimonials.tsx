@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useLayoutEffect, useRef } from 'react';
 import { Star, Quote } from 'lucide-react';
 
 interface TestimonialsProps {
@@ -46,29 +46,46 @@ export const Testimonials: React.FC<TestimonialsProps> = ({ onBecomeClient }) =>
   const [currentIndex, setCurrentIndex] = useState(2);
   const [isPaused, setIsPaused] = useState(false);
   const [disableTransition, setDisableTransition] = useState(false);
-  
-  const [isDesktop, setIsDesktop] = useState(() => {
-    if (typeof window !== 'undefined') {
-      return window.innerWidth >= 768;
-    }
-    return false;
-  });
+  const [isDesktop, setIsDesktop] = useState(() => window.innerWidth >= 768);
+  const [cardHeight, setCardHeight] = useState(0);
 
-  useEffect(() => {
+  const trackRef = useRef<HTMLDivElement>(null);
+  const GAP = 32; // py-4 = 32px
+
+  // 1. Отслеживаем десктоп/мобайл
+  useLayoutEffect(() => {
     const check = () => setIsDesktop(window.innerWidth >= 768);
     check();
     window.addEventListener('resize', check);
     return () => window.removeEventListener('resize', check);
   }, []);
 
-  useEffect(() => {
+  // 2. 🔥 МАТЕМАТИКА: замер → выравнивание → расчёт контейнера (только мобильные)
+  useLayoutEffect(() => {
+    if (isDesktop || !trackRef.current) return;
+
+    requestAnimationFrame(() => {
+      const items = Array.from(trackRef.current?.children || []) as HTMLElement[];
+      if (items.length === 0) return;
+
+      let maxH = 0;
+      items.forEach(el => {
+        const card = el.querySelector('[data-card]') as HTMLElement;
+        if (card) maxH = Math.max(maxH, card.offsetHeight);
+      });
+
+      if (maxH > 0) setCardHeight(maxH);
+    });
+  }, [isDesktop]);
+
+  // 3. Авто-сдвиг
+  useLayoutEffect(() => {
     if (isPaused) return;
-    const timer = setInterval(() => {
-      setCurrentIndex(prev => prev + 1);
-    }, 5000);
+    const timer = setInterval(() => setCurrentIndex(prev => prev + 1), 5000);
     return () => clearInterval(timer);
   }, [isPaused]);
 
+  // 4. Бесшовный сброс
   const handleTransitionEnd = () => {
     if (currentIndex >= carouselItems.length - 3) {
       setDisableTransition(true);
@@ -79,9 +96,13 @@ export const Testimonials: React.FC<TestimonialsProps> = ({ onBecomeClient }) =>
     }
   };
 
+  // 🔥 ТОЧНЫЕ РАСЧЁТЫ
+  const step = cardHeight + GAP;
+  const containerHeight = cardHeight > 0 ? step * 3 : 'auto';
+  
   const transform = isDesktop 
     ? `translateX(-${currentIndex * 33.333}%)` 
-    : `translateY(-${currentIndex * 11.111}%)`;
+    : (cardHeight > 0 ? `translateY(-${currentIndex * step}px)` : `translateY(0px)`);
 
   return (
     <section className="py-24 bg-leather-50 border-t border-leather-200">
@@ -93,13 +114,14 @@ export const Testimonials: React.FC<TestimonialsProps> = ({ onBecomeClient }) =>
           </p>
         </div>
 
-        {/* Контейнер: обрезание по краям */}
-        <div className={`relative overflow-hidden ${isDesktop ? 'min-h-[420px]' : 'h-[1200px] md:h-[420px]'}`}>
-          {/* 🔥 Трек: добавил overflow-hidden только для мобильного грида */}
+        <div 
+          className="relative overflow-hidden"
+          style={{ height: isDesktop ? 'auto' : containerHeight }}
+        >
           <div
-            className={`${isDesktop ? 'flex flex-row' : 'grid grid-cols-1'} ${!isDesktop ? 'overflow-hidden' : ''}`}
+            ref={trackRef}
+            className={isDesktop ? 'flex flex-row items-stretch' : 'flex flex-col'}
             style={{
-              gridTemplateRows: isDesktop ? undefined : 'repeat(9, 1fr)',
               transform,
               transition: disableTransition ? 'none' : 'transform 0.7s ease-in-out',
               willChange: 'transform'
@@ -109,11 +131,21 @@ export const Testimonials: React.FC<TestimonialsProps> = ({ onBecomeClient }) =>
             {carouselItems.map((review, idx) => (
               <div 
                 key={`${review.id}-${idx}`}
-                className={`${isDesktop ? 'w-1/3 px-4' : 'py-4'} ${isDesktop ? '' : 'w-full'} flex-shrink-0`}
+                className={`${isDesktop ? 'w-1/3 px-4' : 'w-full py-4'} flex-shrink-0`}
+                style={!isDesktop && cardHeight > 0 ? { height: `${step}px` } : undefined}
               >
+                {/* 
+                  🔥 ДЕСКТОП: h-full заставляет карточку заполнить растянутую обёртку (flex stretch)
+                   МОБИЛЬНЫЙ: высота управляется JS, h-full не нужен
+                */}
                 <div 
-                  className="bg-white p-8 rounded-sm shadow-sm hover:shadow-lg transition-shadow duration-300 relative border border-leather-200 flex flex-col h-full"
-                  style={{ backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden' }}
+                  data-card
+                  className={`bg-white p-8 rounded-sm shadow-sm hover:shadow-lg transition-shadow duration-300 relative border border-leather-200 flex flex-col min-h-0 ${isDesktop ? 'h-full' : ''}`}
+                  style={{ 
+                    backfaceVisibility: 'hidden', 
+                    WebkitBackfaceVisibility: 'hidden',
+                    height: isDesktop ? undefined : cardHeight > 0 ? `${cardHeight}px` : 'auto'
+                  }}
                 >
                   <div className="absolute top-6 right-8 text-leather-200">
                     <Quote size={48} className="transform rotate-180" />
@@ -125,7 +157,7 @@ export const Testimonials: React.FC<TestimonialsProps> = ({ onBecomeClient }) =>
                     ))}
                   </div>
 
-                  <p className="text-leather-800 leading-relaxed mb-6 flex-grow italic">
+                  <p className="text-leather-800 leading-relaxed mb-6 flex-grow italic break-words">
                     "{review.text}"
                   </p>
 
