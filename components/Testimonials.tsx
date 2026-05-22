@@ -46,11 +46,18 @@ export const Testimonials: React.FC<TestimonialsProps> = ({ onBecomeClient }) =>
   const [currentIndex, setCurrentIndex] = useState(2);
   const [isPaused, setIsPaused] = useState(false);
   const [disableTransition, setDisableTransition] = useState(false);
-  const [isDesktop, setIsDesktop] = useState(false);
+  
+  // 🔥 ИСПРАВЛЕНИЕ: проверяем экран сразу при инициализации, чтобы не было "прыжка" режимов
+  const [isDesktop, setIsDesktop] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return window.innerWidth >= 768;
+    }
+    return false;
+  });
 
   useEffect(() => {
     const check = () => setIsDesktop(window.innerWidth >= 768);
-    check();
+    check(); // обновляем при ресайзе
     window.addEventListener('resize', check);
     return () => window.removeEventListener('resize', check);
   }, []);
@@ -87,9 +94,7 @@ export const Testimonials: React.FC<TestimonialsProps> = ({ onBecomeClient }) =>
           </p>
         </div>
 
-        {/* Контейнер */}
         <div className={`relative overflow-hidden ${isDesktop ? 'min-h-[420px]' : 'h-[1200px] md:h-[420px]'}`}>
-          {/* 🔥 Grid на мобильном (равные строки), Flex на десктопе */}
           <div
             className={isDesktop ? 'flex flex-row' : 'grid grid-cols-1'}
             style={{
