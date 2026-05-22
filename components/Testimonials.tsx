@@ -46,6 +46,14 @@ export const Testimonials: React.FC<TestimonialsProps> = ({ onBecomeClient }) =>
   const [currentIndex, setCurrentIndex] = useState(2);
   const [isPaused, setIsPaused] = useState(false);
   const [disableTransition, setDisableTransition] = useState(false);
+  const [isDesktop, setIsDesktop] = useState(false);
+
+  useEffect(() => {
+    const check = () => setIsDesktop(window.innerWidth >= 768);
+    check();
+    window.addEventListener('resize', check);
+    return () => window.removeEventListener('resize', check);
+  }, []);
 
   useEffect(() => {
     if (isPaused) return;
@@ -65,6 +73,10 @@ export const Testimonials: React.FC<TestimonialsProps> = ({ onBecomeClient }) =>
     }
   };
 
+  const transform = isDesktop 
+    ? `translateX(-${currentIndex * 33.333}%)` 
+    : `translateY(-${currentIndex * 11.111}%)`;
+
   return (
     <section className="py-24 bg-leather-50 border-t border-leather-200">
       <div className="container mx-auto px-6">
@@ -75,25 +87,26 @@ export const Testimonials: React.FC<TestimonialsProps> = ({ onBecomeClient }) =>
           </p>
         </div>
 
-        {/* 🔥 Контейнер: строгий overflow-hidden, без padding/margin хаков */}
-        <div className="relative overflow-hidden min-h-[420px]">
+        {/* Контейнер */}
+        <div className={`relative overflow-hidden ${isDesktop ? 'min-h-[420px]' : 'h-[1200px] md:h-[420px]'}`}>
+          {/* 🔥 Grid на мобильном (равные строки), Flex на десктопе */}
           <div
-            className="flex"
+            className={isDesktop ? 'flex flex-row' : 'grid grid-cols-1'}
             style={{
-              transform: `translateX(-${currentIndex * 33.333}%)`,
-              transition: disableTransition ? 'none' : 'transform 0.7s ease-in-out'
+              gridTemplateRows: isDesktop ? undefined : 'repeat(9, 1fr)',
+              transform,
+              transition: disableTransition ? 'none' : 'transform 0.7s ease-in-out',
+              willChange: 'transform'
             }}
             onTransitionEnd={handleTransitionEnd}
           >
             {carouselItems.map((review, idx) => (
               <div 
                 key={`${review.id}-${idx}`}
-                // 🔥 КЛЮЧ: w-1/3 (ровно 33.333%) + px-4 создаёт отступы ВНУТРИ ширины
-                className="w-1/3 flex-shrink-0 px-4"
+                className={`${isDesktop ? 'w-1/3 px-4' : 'py-4'} ${isDesktop ? '' : 'w-full'} flex-shrink-0`}
               >
                 <div 
                   className="bg-white p-8 rounded-sm shadow-sm hover:shadow-lg transition-shadow duration-300 relative border border-leather-200 flex flex-col h-full"
-                  // 🔥 Фикс размытия границ при анимации
                   style={{ backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden' }}
                 >
                   <div className="absolute top-6 right-8 text-leather-200">
