@@ -47,7 +47,6 @@ export const Testimonials: React.FC<TestimonialsProps> = ({ onBecomeClient }) =>
   const [isPaused, setIsPaused] = useState(false);
   const [disableTransition, setDisableTransition] = useState(false);
   
-  // 🔥 ИСПРАВЛЕНИЕ: проверяем экран сразу при инициализации, чтобы не было "прыжка" режимов
   const [isDesktop, setIsDesktop] = useState(() => {
     if (typeof window !== 'undefined') {
       return window.innerWidth >= 768;
@@ -57,7 +56,7 @@ export const Testimonials: React.FC<TestimonialsProps> = ({ onBecomeClient }) =>
 
   useEffect(() => {
     const check = () => setIsDesktop(window.innerWidth >= 768);
-    check(); // обновляем при ресайзе
+    check();
     window.addEventListener('resize', check);
     return () => window.removeEventListener('resize', check);
   }, []);
@@ -94,9 +93,11 @@ export const Testimonials: React.FC<TestimonialsProps> = ({ onBecomeClient }) =>
           </p>
         </div>
 
+        {/* Контейнер: обрезание по краям */}
         <div className={`relative overflow-hidden ${isDesktop ? 'min-h-[420px]' : 'h-[1200px] md:h-[420px]'}`}>
+          {/* 🔥 Трек: добавил overflow-hidden только для мобильного грида */}
           <div
-            className={isDesktop ? 'flex flex-row' : 'grid grid-cols-1'}
+            className={`${isDesktop ? 'flex flex-row' : 'grid grid-cols-1'} ${!isDesktop ? 'overflow-hidden' : ''}`}
             style={{
               gridTemplateRows: isDesktop ? undefined : 'repeat(9, 1fr)',
               transform,
