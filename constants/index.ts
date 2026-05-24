@@ -6,9 +6,9 @@ import { BELTS } from './products/belts';
 import { WALLETS } from './products/wallets';
 import { COMPACT } from './products/compact';
 import { HOME } from './products/home';
+import { ACCESSORIES } from './products/accessories';
 import { BAGS } from './products/bags';
 import { WATCH_STRAPS } from './products/watch_straps';
-import { ACCESSORIES } from './products/accessories';
 import { EXCLUSIVE } from './products/exclusive';
 import { GIFT_SETS } from './products/gift_sets';
 import { CARE } from './products/care';
@@ -22,9 +22,9 @@ export const PRODUCTS = [
   ...WALLETS,
   ...COMPACT,
   ...HOME,
+  ...ACCESSORIES,
   ...BAGS,
   ...WATCH_STRAPS,
-  ...ACCESSORIES,
   ...EXCLUSIVE,
   ...GIFT_SETS,
   ...CARE, // <-- Уходовые средства тоже в общем списке

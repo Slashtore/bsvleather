@@ -6,9 +6,9 @@ export enum ProductCategory {
   WALLETS = 'Кошельки',
   COMPACT = 'Картхолдеры и Зажимы',
   HOME = 'Для дома и офиса',
+  ACCESSORIES = 'Мелочи и Чехлы',
   BAGS = 'Сумки и Рюкзаки',
   WATCH_STRAPS = 'Часовые ремешки',
-  ACCESSORIES = 'Мелочи и Чехлы',
   EXCLUSIVE = 'Эксклюзив и Арт',
   GIFT_SETS = 'Подарочные наборы',
   CARE = 'Средства ухода'

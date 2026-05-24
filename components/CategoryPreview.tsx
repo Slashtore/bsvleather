@@ -33,6 +33,12 @@ export const CategoryPreview: React.FC<CategoryPreviewProps> = ({ onSelectCatego
       desc: 'Эстетика, уют и запах натуральной кожи в вашем интерьере.'
     },
     {
+      id: ProductCategory.ACCESSORIES,
+      title: ProductCategory.ACCESSORIES,
+      image: '/image/category accessories.jpg',
+      desc: 'Стиль складывается из незаметных, но важных деталей.'
+    },
+    {
       id: ProductCategory.BAGS,
       title: ProductCategory.BAGS,
       image: 'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?q=80&w=1000&auto=format&fit=crop',
@@ -43,12 +49,6 @@ export const CategoryPreview: React.FC<CategoryPreviewProps> = ({ onSelectCatego
       title: ProductCategory.WATCH_STRAPS,
       image: 'https://images.unsplash.com/photo-1542835697-3f3074dc6312?q=80&w=1000&auto=format&fit=crop',
       desc: 'Новое дыхание и индивидуальный характер для любимых часов.'
-    },
-    {
-      id: ProductCategory.ACCESSORIES,
-      title: ProductCategory.ACCESSORIES,
-      image: 'https://images.unsplash.com/photo-1612462766564-98ae8629f458?q=80&w=1000&auto=format&fit=crop',
-      desc: 'Стиль складывается из незаметных, но важных деталей.'
     },
     {
       id: ProductCategory.EXCLUSIVE,
@@ -85,8 +85,8 @@ export const CategoryPreview: React.FC<CategoryPreviewProps> = ({ onSelectCatego
         Сейчас некоторые категории скрыты благодаря строчке кода ниже. Чтобы вернуть другие категории нужно прописать строчку так (выбери код между долларами в комментарии) ${categories.map((cat) => ($ */}
         {/* Сетка: границы не накладываются → всегда 1px. Пустота залита #d9d9d9 */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 border border-leather-200 bg-[#d9d9d9]">
-          {categories.slice(0, 4).map((cat, idx) => {
-            const total = categories.slice(0, 4).length;
+          {categories.slice(0, 5).map((cat, idx) => {
+            const total = categories.slice(0, 5).length;
             const cols = 3;
             const currentRow = Math.floor(idx / cols);
             const totalRows = Math.ceil(total / cols);
