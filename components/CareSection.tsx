@@ -42,7 +42,7 @@ export const CareSection: React.FC<CareSectionProps> = ({ onAddToCart }) => {
                     <div className="flex flex-col justify-between flex-grow">
                         <div>
                             <h3 className="font-serif text-lg text-leather-900 font-bold leading-tight mb-2">{product.name}</h3>
-                            <p className="text-sm text-leather-600 line-clamp-2 mb-3">{product.description}</p>
+                            <p className="text-sm text-leather-600 mb-3">{product.description}</p>
                         </div>
                         <div className="flex justify-between items-center mt-auto">
                             <span className="font-bold text-leather-900">{product.price} ₽</span>
