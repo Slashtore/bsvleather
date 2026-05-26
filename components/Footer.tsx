@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { MessageCircle } from 'lucide-react';
 import { Logo } from './Logo';
 import { InfoModal } from './InfoModal';
 import { DELIVERY_INFO, WARRANTY_INFO, CARE_INFO, CONTACT_CONFIG } from '../constants';
@@ -30,6 +29,20 @@ const DzenIcon = ({ size = 24, className = "" }: { size?: number, className?: st
     className={className}
   >
     <path d="M16.7 16.7c-2.2 2.27-2.36 5.1-2.55 11.3 5.78 0 9.77-.02 11.83-2.02 2-2.06 2.02-6.24 2.02-11.83-6.2.2-9.03.35-11.3 2.55M0 14.15c0 5.59.02 9.77 2.02 11.83 2.06 2 6.05 2.02 11.83 2.02-.2-6.2-.35-9.03-2.55-11.3-2.27-2.2-5.1-2.36-11.3-2.55M13.85 0C8.08 0 4.08.02 2.02 2.02.02 4.08 0 8.26 0 13.85c6.2-.2 9.03-.35 11.3-2.55 2.2-2.27 2.36-5.1 2.55-11.3m2.85 11.3C14.5 9.03 14.34 6.2 14.15 0c5.78 0 9.77.02 11.83 2.02 2 2.06 2.02 6.24 2.02 11.83-6.2-.2-9.03-.35-11.3-2.55" />
+  </svg>
+);
+
+// Max Icon - cleaned, no circle background
+const MaxIcon = ({ size = 24, className = "" }: { size?: number, className?: string }) => (
+  <svg 
+    xmlns="http://www.w3.org/2000/svg" 
+    width={size} 
+    height={size} 
+    viewBox="0 0 100 100" 
+    fill="currentColor"
+    className={className}
+  >
+    <path d="M83.914 77.442c8.441,-10.25 12.321,-22.922 10.453,-36.7 -1.02,-8.87 -4.809,-16.537 -10.088,-23.542 -2.73,-3.62 -7.882,-8.071 -11.912,-10.455 -21.548,-12.743 -48.523,-6.768 -63.107,12.347 -9.874,12.943 -11.264,29.017 -6.934,47.811 1.414,6.134 3.351,11.781 4.155,18.057 0.226,1.759 0.157,5.52 0.692,6.747 1.656,3.797 7.312,2.929 11.082,1.575 2.408,-0.866 5.242,-2.364 7.105,-3.989 0.794,-0.692 1.158,-1.203 1.91,-1.862 2.221,1.014 5.268,4.366 11.762,5.895 4.784,1.126 11.497,1.053 16.488,0.292 10.294,-1.569 18.007,-6.094 25.5,-13 0.957,-0.882 2.025,-2.166 2.894,-3.176zm-12.809 -35.313c1.39,4.518 0.233,11.07 -1.596,14.844 -4.026,8.307 -11.933,13.705 -21.269,14.048 -7.694,0.284 -11.594,-3.445 -13.514,-4.055 -5.191,4.237 -7.812,8.703 -10.382,-4.409 -2.48,-12.653 -0.802,-27.483 9.825,-35.204 4.379,-3.181 10.616,-4.796 16.232,-4.032 2.175,0.297 3.869,0.755 5.943,1.54 6.96,2.633 13.327,9.625 14.761,17.268z"/>
   </svg>
 );
 
@@ -85,7 +98,7 @@ export const Footer: React.FC = () => {
                 <div className="flex gap-6 items-center">
                     <a href="https://vk.com/club238936761" target="_blank" rel="noreferrer" className="hover:text-white transition-colors" title="ВКонтакте"><VkIcon size={24} className="translate-y-[1.5px]" /></a>
                     <a href="https://dzen.ru/id/680b7e950637d556531bf3d6" target="_blank" rel="noreferrer" className="hover:text-white transition-colors" title="Дзен"><DzenIcon size={24} className="translate-y-[1px]" /></a>
-                    <a href={CONTACT_CONFIG.MESSENGER_URL} target="_blank" rel="noreferrer" className="hover:text-[#2AABEE] transition-colors" title={CONTACT_CONFIG.MESSENGER_LABEL}><MessageCircle size={24} /></a>
+                    <a href={CONTACT_CONFIG.MESSENGER_URL} target="_blank" rel="noreferrer" className="hover:text-[#2AABEE] transition-colors" title={CONTACT_CONFIG.MESSENGER_LABEL}><MaxIcon size={24} className="translate-y-[1px]" /></a>
                 </div>
                 <div className="text-sm text-center md:text-right">
                     <p>&copy; {new Date().getFullYear()} BSV Leather Workshop.</p>
