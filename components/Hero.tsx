@@ -29,7 +29,7 @@ export const Hero: React.FC<HeroProps> = ({ onNavigate }) => {
         
         {/* Crest / Logo */}
         <div className="mb-6 text-leather-200 opacity-90 transform hover:scale-105 transition-transform duration-700">
-           <Logo variant="page" className="w-80 h-80 md:w-88 md:h-88" />
+           <Logo variant="page" className="w-64 h-64 md:w-80 md:h-80" />
         </div>
 
         {/* Separator Line Top */}

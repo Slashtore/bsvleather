@@ -102,11 +102,11 @@ export const CategoryPreview: React.FC<CategoryPreviewProps> = ({ onSelectCatego
                   ${!isLastRow ? 'border-b border-leather-200' : ''}`}
               >
                 {/* Background Image */}
-                <div className="absolute inset-0">
+                <div className="absolute inset-0 md:inset-8">
                   <img 
                       src={cat.image} 
                       alt={cat.title}
-                      className="w-full h-full object-cover grayscale transition-all duration-1000 group-hover:scale-110 group-hover:grayscale-0"
+                      className="w-full h-full object-cover grayscale transition-all duration-1000 group-hover:scale-110 md:group-hover:scale-105 group-hover:grayscale-0"
                   />
                 </div>
 
