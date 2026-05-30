@@ -5,7 +5,12 @@ export const MUSIC_ACCESSORIES: Product[] = [
     id: 'guitar-belt-1',
     name: 'Ремень для гитары "Classic Brown"',
     category: ProductCategory.MUSIC_ACCESSORIES,
-    price: 2900,
+    recipe: {
+      leather: { type: 'dm', amount: 14 },
+      hardware: [
+      ],
+      hours: 2.5
+    },
     description: 'Ремень для гитары из натуральной кожи растительного дубления. Регулируемая длина.',
     imageUrl: '/image/guitar-belt-1.1.jpg',
     images: [

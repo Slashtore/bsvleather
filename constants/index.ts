@@ -24,10 +24,10 @@ export const PRODUCTS = [
   ...COMPACT,
   ...HOME,
   ...ACCESSORIES,
+  ...MUSIC_ACCESSORIES,
   ...BAGS,
   ...WATCH_STRAPS,
   ...EXCLUSIVE,
   ...GIFT_SETS,
-  ...CARE,
-  ...MUSIC_ACCESSORIES
+  ...CARE
 ];
