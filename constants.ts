@@ -5,6 +5,7 @@ import { WALLETS } from './constants/products/wallets';
 import { COMPACT } from './constants/products/compact';
 import { HOME } from './constants/products/home';
 import { ACCESSORIES } from './constants/products/accessories';
+import { MUSIC_ACCESSORIES } from './constants/products/music_accessories';
 import { BAGS } from './constants/products/bags';
 import { WATCH_STRAPS } from './constants/products/watch_straps';
 import { EXCLUSIVE } from './constants/products/exclusive';
@@ -91,7 +92,8 @@ export const PRODUCTS: Product[] = [
   ...COMPACT,
   ...WALLETS,
   ...BELTS,
-  ...CARE, // УХОДОВЫЕ СРЕДСТВА
+  ...CARE,
+  ...MUSIC_ACCESSORIES
 ];
 
 // 4. КАТАЛОГ МАТЕРИАЛОВ

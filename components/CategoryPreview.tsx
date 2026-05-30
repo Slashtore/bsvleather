@@ -39,6 +39,12 @@ export const CategoryPreview: React.FC<CategoryPreviewProps> = ({ onSelectCatego
       desc: 'Стиль складывается из незаметных, но важных деталей.'
     },
     {
+      id: ProductCategory.MUSIC_ACCESSORIES,
+      title: ProductCategory.MUSIC_ACCESSORIES,
+      image: '/image/category music.jpg', // ← замени на путь к твоему фото
+      desc: 'Создавайте мелодии с аксессуарами, которые звучат стилем и качеством.'
+    },
+    {
       id: ProductCategory.BAGS,
       title: ProductCategory.BAGS,
       image: 'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?q=80&w=1000&auto=format&fit=crop',
@@ -85,8 +91,8 @@ export const CategoryPreview: React.FC<CategoryPreviewProps> = ({ onSelectCatego
         Сейчас некоторые категории скрыты благодаря строчке кода ниже. Чтобы вернуть другие категории нужно прописать строчку так (выбери код между долларами в комментарии) ${categories.map((cat) => ($ */}
         {/* Сетка: границы не накладываются → всегда 1px. Пустота залита #d9d9d9 */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 border border-leather-200 bg-[#d9d9d9]">
-          {categories.slice(0, 5).map((cat, idx) => {
-            const total = categories.slice(0, 5).length;
+          {categories.slice(0, 6).map((cat, idx) => {
+            const total = categories.slice(0, 6).length;
             const cols = 3;
             const currentRow = Math.floor(idx / cols);
             const totalRows = Math.ceil(total / cols);

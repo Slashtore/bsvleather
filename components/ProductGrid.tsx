@@ -31,7 +31,7 @@ export const ProductGrid: React.FC<ProductGridProps> = ({
   }, [initialCategory]);
 
   // Временно разрешённые категории
-  const allowedCategories = [ProductCategory.BELTS, ProductCategory.WALLETS, ProductCategory.COMPACT, ProductCategory.HOME, ProductCategory.ACCESSORIES];
+  const allowedCategories = [ProductCategory.BELTS, ProductCategory.WALLETS, ProductCategory.COMPACT, ProductCategory.HOME, ProductCategory.ACCESSORIES, ProductCategory.MUSIC_ACCESSORIES];
 
   const filteredProducts = useMemo(() => {
     // 1. Сначала берём только товары из «белого списка»
@@ -74,7 +74,7 @@ export const ProductGrid: React.FC<ProductGridProps> = ({
         {/* Categories - Wrapped on mobile, centered on desktop */}
         <div className="mb-12">
           <div className="flex flex-wrap justify-center gap-2 md:gap-4">
-            {[ProductCategory.ALL, ProductCategory.BELTS, ProductCategory.WALLETS, ProductCategory.COMPACT, ProductCategory.HOME, ProductCategory.ACCESSORIES].map((category) => (
+            {[ProductCategory.ALL, ProductCategory.BELTS, ProductCategory.WALLETS, ProductCategory.COMPACT, ProductCategory.HOME, ProductCategory.ACCESSORIES, ProductCategory.MUSIC_ACCESSORIES].map((category) => (
               <button
                 key={category}
                 onClick={() => setActiveCategory(category)}
