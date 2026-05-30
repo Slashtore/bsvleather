@@ -3,7 +3,7 @@ import { Product, ProductCategory } from '../../types';
 export const MUSIC_ACCESSORIES: Product[] = [
   {
     id: 'guitar-belt-1',
-    name: 'Ремень для гитары "Classic Brown"',
+    name: 'Ремень для гитары "Аккорд"',
     category: ProductCategory.MUSIC_ACCESSORIES,
     recipe: {
       leather: { type: 'dm', amount: 14 },
