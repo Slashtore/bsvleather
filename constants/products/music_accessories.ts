@@ -9,7 +9,7 @@ export const MUSIC_ACCESSORIES: Product[] = [
       leather: { type: 'dm', amount: 14 },
       hardware: [
       ],
-      hours: 2.5
+      hours: 3
     },
     description: 'Ремень для гитары из натуральной кожи растительного дубления. Регулируемая длина.',
     imageUrl: '/image/guitar-belt-1.1.jpg',

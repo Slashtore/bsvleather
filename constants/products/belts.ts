@@ -3,7 +3,7 @@ import { Product, ProductCategory } from '../../types';
 export const BELTS: Product[] = [
   {
     id: 'belt-1',
-    name: 'Ремень "Классический"',
+    name: 'Ремень "Форма"',
     category: ProductCategory.BELTS,
     recipe: {
       leather: { type: 'belt_blank_4_0cm', amount: 1.3 },
