@@ -8,7 +8,7 @@ export const About: React.FC = () => {
           <div className="w-full md:w-1/2 relative">
             <div className="absolute top-4 -left-4 w-full h-full border-2 border-leather-200 z-0"></div>
             <img 
-              src="/image/lifetime-leather.jpg" 
+              src="/image/me.jpeg" 
               alt="Мастер за работой" 
               className="relative z-10 w-full shadow-lg rounded-sm grayscale hover:grayscale-0 transition-all duration-700"
             />
