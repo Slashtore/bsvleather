@@ -87,25 +87,20 @@ export const CategoryPreview: React.FC<CategoryPreviewProps> = ({ onSelectCatego
           </button>
         </div>
 
-        {/* The Grid: Using 'gap-px' and a gray background to create thin distinct lines between white cards.
-        Сейчас некоторые категории скрыты благодаря строчке кода ниже. Чтобы вернуть другие категории нужно прописать строчку так (выбери код между долларами в комментарии) ${categories.map((cat) => ($ */}
-        {/* Сетка: границы не накладываются → всегда 1px. Пустота залита #d9d9d9 */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 border border-leather-200 bg-[#d9d9d9]">
+        {/* Сетка: gap-px создаёт линии за счёт видимого фона родителя */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-px bg-leather-200">
           {categories.slice(0, 6).map((cat, idx) => {
             const total = categories.slice(0, 6).length;
             const cols = 3;
             const currentRow = Math.floor(idx / cols);
             const totalRows = Math.ceil(total / cols);
             const isLastInRow = (idx + 1) % cols === 0;
-            const isLastRow = currentRow === totalRows - 1;
 
             return (
               <div 
                 key={cat.title}
                 onClick={() => onSelectCategory(cat.id)}
-                className={`group relative h-[400px] cursor-pointer overflow-hidden bg-white 
-                  ${!isLastInRow ? 'border-r border-leather-200' : ''} 
-                  ${!isLastRow ? 'border-b border-leather-200' : ''}`}
+                className="group relative h-[400px] cursor-pointer overflow-hidden bg-white"
               >
                 {/* Background Image */}
                 <div className="absolute inset-0 md:inset-8">
@@ -123,9 +118,9 @@ export const CategoryPreview: React.FC<CategoryPreviewProps> = ({ onSelectCatego
                 <div className="absolute inset-0 p-8 flex flex-col justify-end">
                   {/* Top Label */}
                   <div className="absolute top-8 left-8 opacity-0 group-hover:opacity-100 transition-all duration-500 transform -translate-y-4 group-hover:translate-y-0">
-                     <span className="text-white text-[10px] uppercase tracking-widest border border-white/40 px-3 py-1 backdrop-blur-sm">
-                       Открыть
-                     </span>
+                    <span className="text-white text-[10px] uppercase tracking-widest border border-white/40 px-3 py-1 backdrop-blur-sm">
+                      Открыть
+                    </span>
                   </div>
 
                   {/* Main Text */}
