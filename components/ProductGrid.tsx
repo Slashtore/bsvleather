@@ -226,7 +226,7 @@ export const ProductGrid: React.FC<ProductGridProps> = ({
                             <img 
                               key={galleryImages[activeImageIdx]}
                               src={galleryImages[activeImageIdx]} 
-                              alt={selectedProduct.name} 
+                              alt={`${selectedProduct.name} — фото ${activeImageIdx + 1} из натуральной кожи ручной работы`} 
                               className="w-full h-full object-cover transition-opacity duration-300"
                             />
                             
@@ -262,7 +262,11 @@ export const ProductGrid: React.FC<ProductGridProps> = ({
                                       : 'border-leather-200 opacity-60 hover:opacity-100 hover:border-leather-400'
                                   }`}
                                 >
-                                  <img src={img} alt="" className="w-full h-full object-cover" />
+                                  <img 
+                                    src={img} 
+                                    alt={`${selectedProduct.name} — миниатюра ${idx + 1}`} 
+                                    className="w-full h-full object-cover" 
+                                  />
                                 </button>
                               ))}
                             </div>

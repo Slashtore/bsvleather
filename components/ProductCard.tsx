@@ -65,7 +65,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelect, onA
         */}
         <img 
           src={product.imageUrl} 
-          alt={product.name} 
+          alt={`${product.name} из натуральной кожи ручной работы — BSV Leather Воронеж`} 
           className={`w-full h-full object-cover transition-transform duration-700 ${
             isOverlayVisible 
               ? 'scale-105' 
