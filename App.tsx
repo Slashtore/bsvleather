@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { Helmet, HelmetProvider } from 'react-helmet-async'; // ← ИМПОРТИРУЕМ HELMET
+
 import { Header } from './components/Header';
 import { Hero } from './components/Hero';
 import { ProductGrid } from './components/ProductGrid';
@@ -22,15 +24,13 @@ import { CalculatorTool } from './components/CalculatorTool';
 
 type ViewState = 'home' | 'catalog' | 'materials-catalog' | 'help' | 'calc';
 
-// ← ИЗМЕНЕНО: Ключ для localStorage
 const CART_STORAGE_KEY = 'bsv_leather_cart';
 
-function App() {
+function AppContent() {
   const [currentView, setCurrentView] = useState<ViewState>('home');
   const [initialCategory, setInitialCategory] = useState<ProductCategory>(ProductCategory.ALL);
   const [isCartOpen, setIsCartOpen] = useState(false);
   
-  // ← ИЗМЕНЕНО: Инициализация корзины из localStorage
   const [cartItems, setCartItems] = useState<CartItem[]>(() => {
     try {
       const saved = localStorage.getItem(CART_STORAGE_KEY);
@@ -41,7 +41,6 @@ function App() {
     }
   });
   
-  // ← ИЗМЕНЕНО: Автосохранение корзины при каждом изменении
   useEffect(() => {
     try {
       localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cartItems));
@@ -50,21 +49,21 @@ function App() {
     }
   }, [cartItems]);
 
-  // 🔥 ПРОВЕРКА: сначала смотрим, не редирект ли с 404, потом — прямой адрес
   useEffect(() => {
     const restorePath = sessionStorage.getItem('restorePath');
+    const params = new URLSearchParams(window.location.search);
     
-    if (restorePath === '/calc') {
+    // Если перешли по прямой ссылке на товар — сразу включаем каталог
+    if (params.get('product')) {
+      setCurrentView('catalog');
+    } else if (restorePath === '/calc') {
       setCurrentView('calc');
-      sessionStorage.removeItem('restorePath'); // чистим, чтобы не сбивать потом
-    } 
-    // Фолбэк для локальной разработки (когда 404.html не используется)
-    else if (window.location.pathname === '/calc') {
+      sessionStorage.removeItem('restorePath');
+    } else if (window.location.pathname === '/calc') {
       setCurrentView('calc');
     }
   }, []);
 
-  // 🔥 Обработчик хэша для каталога (#catalog)
   useEffect(() => {
     const handleHashScroll = () => {
       const hash = window.location.hash.replace('#', '');
@@ -87,9 +86,7 @@ function App() {
     return () => window.removeEventListener('hashchange', handleHashScroll);
   }, [currentView]);
 
-  // State to pass data to the Contact Form
   const [contactPrefill, setContactPrefill] = useState<{type: string, message: string} | null>(null);
-
   const [helpSection, setHelpSection] = useState<string>('GENERAL');
 
   const goToHelpSection = (section: string) => {
@@ -99,8 +96,6 @@ function App() {
   };
 
   const handleAddToCart = (product: Product) => {
-    // 🔥 Страховка: если product.price — undefined, но есть recipe, считаем.
-    // Если нет recipe, но есть price — берём price.
     const rawPrice = product.price;
     const hasRecipe = !!product.recipe && !!(product.recipe as any).leather;
     
@@ -108,11 +103,9 @@ function App() {
     if (hasRecipe) {
       finalPrice = calculatePrice(product.recipe, rawPrice, product.name);
     } else {
-      // Для ухода: берём price, если он есть и это число
       finalPrice = typeof rawPrice === 'number' && !isNaN(rawPrice) ? rawPrice : 0;
     }
 
-    // 🔥 Финальная страховка: цена не может быть NaN
     if (isNaN(finalPrice) || finalPrice < 0) {
       console.error('⚠️ Invalid price calculated for', product.name, { rawPrice, recipe: product.recipe });
       finalPrice = 0;
@@ -148,19 +141,16 @@ function App() {
     setCartItems(prev => prev.filter(item => item.id !== id));
   };
 
-  // Simple Router Logic
   const navigateTo = (view: ViewState, sectionId?: string) => {
     setCurrentView(view);
     window.scrollTo(0, 0);
 
-    // Если идём на главную — очищаем хэш, чтобы не срабатывал авто-редирект в каталог
     if (view === 'home') {
       if (window.location.hash) {
         history.replaceState(null, '', window.location.pathname + window.location.search);
       }
     }
     
-    // If navigating to a section on home page
     if (view === 'home' && sectionId) {
       setTimeout(() => {
         const element = document.getElementById(sectionId);
@@ -177,7 +167,6 @@ function App() {
     window.scrollTo(0, 0);
   };
 
-  // Helper to scroll to contact and prefill
   const handleContactAction = (type: string, message: string = '') => {
     setContactPrefill({ type, message });
     const element = document.getElementById('contact');
@@ -188,8 +177,62 @@ function App() {
 
   const cartCount = cartItems.reduce((acc, item) => acc + item.quantity, 0);
 
+  // 🔥 ДИНАМИЧЕСКИЕ ДАННЫЕ SEO В ЗАВИСИМОСТИ ОТ ТЕКУЩЕГО ЭКРАНА
+  const getSeoData = () => {
+    switch (currentView) {
+      case 'catalog':
+        return {
+          title: 'Каталог изделий из кожи ручной работы — BSV Leather Воронеж',
+          description: 'Авторские ремни, кошельки, картхолдеры и аксессуары из натуральной кожи растительного табления. Изготовление на заказ в Воронеже.',
+          url: 'https://bsvleather.ru/#catalog',
+        };
+      case 'materials-catalog':
+        return {
+          title: 'Каталог кожи и материалов — BSV Leather',
+          description: 'Натуральная кожа растительного и хромового табления, итальская фурнитура и прочные нити, которые мы используем в производстве.',
+          url: 'https://bsvleather.ru/',
+        };
+      case 'calc':
+        return {
+          title: 'Калькулятор стоимости кожаных изделий — BSV Leather',
+          description: 'Рассчитайте примерную стоимость кастомного изделия из кожи ручной работы онлайн.',
+          url: 'https://bsvleather.ru/calc',
+        };
+      case 'help':
+        return {
+          title: 'Центр помощи и частые вопросы — BSV Leather',
+          description: 'Ответы на вопросы по уходу за кожей, оплате, доставке и гарантии на ручные изделия BSV Leather.',
+          url: 'https://bsvleather.ru/',
+        };
+      case 'home':
+      default:
+        return {
+          title: 'BSV Leather | Кожаная мастерская Воронеж | Ремни, Кошельки и Подарки на заказ',
+          description: 'Изделия из натуральной кожи ручной работы в Воронеже. Авторские ремни, кошельки, картхолдеры, 3D-моделирование и кастомизация.',
+          url: 'https://bsvleather.ru/',
+        };
+    }
+  };
+
+  const seo = getSeoData();
+
   return (
     <div className="min-h-screen bg-leather-50">
+      {/* 🔥 ДИНАМИЧЕСКИЕ ТЕГИ ДЛЯ СТРАНИЦЫ */}
+      <Helmet>
+        <title>{seo.title}</title>
+        <meta name="description" content={seo.description} />
+        <link rel="canonical" href={seo.url} />
+
+        {/* Open Graph (Facebook, Telegram, VK, WhatsApp) */}
+        <meta property="og:title" content={seo.title} />
+        <meta property="og:description" content={seo.description} />
+        <meta property="og:url" content={seo.url} />
+        <meta property="og:type" content="website" />
+        <meta property="og:site_name" content="BSV Leather" />
+        <meta property="og:image" content="https://bsvleather.ru/og-image.jpg" />
+      </Helmet>
+
       <Header 
         cartCount={cartCount} 
         onOpenCart={() => setIsCartOpen(true)}
@@ -202,7 +245,6 @@ function App() {
       />
       
       <main>
-        {/* 🔥 КАЛЬКУЛЯТОР — ОТДЕЛЬНЫЙ ЭКРАН */}
         {currentView === 'calc' && (
           <CalculatorTool />
         )}
@@ -280,4 +322,11 @@ function App() {
   );
 }
 
-export default App;
+// 🔥 КОРНЕВОЙ ЭКСПОРТ С HELMET PROVIDER
+export default function App() {
+  return (
+    <HelmetProvider>
+      <AppContent />
+    </HelmetProvider>
+  );
+}

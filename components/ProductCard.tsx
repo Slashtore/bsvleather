@@ -81,13 +81,20 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelect, onA
               : 'opacity-0 pointer-events-none [@media(hover:hover)]:group-hover:opacity-100 [@media(hover:hover)]:group-hover:bg-black/20 [@media(hover:hover)]:group-hover:pointer-events-auto'
           }`}
         >
-          <button 
-            onClick={handleSelectProduct}
-            onTouchEnd={handleSelectProduct}
-            className="bg-white text-leather-900 px-6 py-3 min-w-[140px] uppercase tracking-widest text-xs font-bold hover:bg-leather-900 hover:text-white transition-colors border border-white shadow-xl"
+          <a 
+            href={`/?product=${product.id}`}
+            onClick={(e) => {
+              e.preventDefault();
+              handleSelectProduct(e);
+            }}
+            onTouchEnd={(e) => {
+              e.preventDefault();
+              handleSelectProduct(e);
+            }}
+            className="bg-white text-leather-900 px-6 py-3 min-w-[140px] uppercase tracking-widest text-xs font-bold hover:bg-leather-900 hover:text-white transition-colors border border-white shadow-xl flex items-center justify-center text-center"
           >
             Подробнее
-          </button>
+          </a>
           
           <button 
             onClick={handleAddToCart}
