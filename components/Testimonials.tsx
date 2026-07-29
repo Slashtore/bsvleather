@@ -1,5 +1,5 @@
 import React, { useState, useLayoutEffect, useRef } from 'react';
-import { Star, Quote } from 'lucide-react';
+import { Star, Quote, ArrowRight } from 'lucide-react';
 
 interface TestimonialsProps {
   onBecomeClient: () => void;
@@ -186,13 +186,14 @@ export const Testimonials: React.FC<TestimonialsProps> = ({ onBecomeClient }) =>
           </div>
         </div>
         
-        {/* Кнопка "Стать клиентом" */}
-        <div className="text-center mt-12">
+        {/* Блок яркой кнопки "Стать клиентом" */}
+        <div className="text-center mt-12 md:mt-16">
           <button 
             onClick={onBecomeClient}
-            className="inline-block text-stone-700 hover:text-[#885036] border-b border-stone-400 hover:border-[#885036] pb-1 text-xs font-bold uppercase tracking-widest transition-all duration-300"
+            className="inline-flex items-center gap-2.5 px-8 py-4 bg-[#1a110f] text-[#e6ccb2] hover:bg-stone-900 transition-all duration-300 uppercase tracking-widest text-xs font-bold rounded-sm shadow-md hover:shadow-lg border border-stone-800 group"
           >
-            Стать клиентом
+            <span>Стать клиентом</span>
+            <ArrowRight size={15} className="transform group-hover:translate-x-1 transition-transform duration-300" />
           </button>
         </div>
 

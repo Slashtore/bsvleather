@@ -27,9 +27,8 @@ export const Hero: React.FC<HeroProps> = ({ onNavigate }) => {
       {/* 3. Основной контент */}
       <div className="relative z-10 flex flex-col items-center justify-center text-center px-4 max-w-4xl mx-auto">
         
-        {/* УВЕЛИЧЕННЫЙ логотип-печать сверху */}
-        {/* Увеличил mb-4 -> mb-6 и размеры w/h */}
-        <div className="mb-6 text-[#e6ccb2]/90 transform hover:scale-105 transition-transform duration-500 cursor-pointer">
+        {/* Логотип-печать сверху (СКРЫТ на мобилках через hidden, виден от md и выше) */}
+        <div className="hidden md:block mb-6 text-[#e6ccb2]/90 transform hover:scale-105 transition-transform duration-500 cursor-pointer">
            <Logo variant="page" className="w-32 h-32 md:w-44 md:h-44 drop-shadow-[0_6px_16px_rgba(0,0,0,0.8)]" />
         </div>
 
@@ -87,10 +86,9 @@ export const Hero: React.FC<HeroProps> = ({ onNavigate }) => {
 
       </div>
 
-      {/* УВЕЛИЧЕННЫЙ индикатор скролла вниз */}
-      {/* Увеличил bottom-6 -> bottom-8, gap-2 -> gap-3, размер текста и иконки */}
+      {/* Индикатор скролла вниз */}
       <div 
-        className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex flex-col items-center gap-3 text-stone-400/60 hover:text-stone-200 transition-colors cursor-pointer z-10" 
+        className="absolute bottom-6 md:bottom-8 left-1/2 transform -translate-x-1/2 flex flex-col items-center gap-2 md:gap-3 text-stone-400/60 hover:text-stone-200 transition-colors cursor-pointer z-10" 
         onClick={onNavigate}
       >
         <span className="text-xs uppercase tracking-[0.2em] font-mono">Листать вниз</span>
