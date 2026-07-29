@@ -50,19 +50,38 @@ function AppContent() {
     }
   }, [cartItems]);
 
+  // --- СИНХРОНИЗАЦИЯ С ИСТОРИЕЙ БРАУЗЕРА (КНОПКА НАЗАД) ---
   useEffect(() => {
     const restorePath = sessionStorage.getItem('restorePath');
     const params = new URLSearchParams(window.location.search);
     
-    // Если перешли по прямой ссылке на товар — сразу включаем каталог
+    let initialView: ViewState = 'home';
     if (params.get('product')) {
-      setCurrentView('catalog');
+      initialView = 'catalog';
     } else if (restorePath === '/calc') {
-      setCurrentView('calc');
+      initialView = 'calc';
       sessionStorage.removeItem('restorePath');
-    } else if (window.location.pathname === '/calc') {
-      setCurrentView('calc');
+    } else if (window.location.pathname === '/calc' || window.location.hash === '#calc') {
+      initialView = 'calc';
     }
+
+    setCurrentView(initialView);
+
+    // Записываем начальное состояние в историю браузера, если её еще нет
+    if (!window.history.state) {
+      window.history.replaceState({ view: initialView }, '', window.location.href);
+    }
+
+    const handlePopState = (event: PopStateEvent) => {
+      if (event.state && event.state.view) {
+        setCurrentView(event.state.view);
+      } else {
+        setCurrentView('home');
+      }
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
   }, []);
 
   useEffect(() => {
@@ -92,8 +111,7 @@ function AppContent() {
 
   const goToHelpSection = (section: string) => {
     setHelpSection(section);
-    setCurrentView('help');
-    window.scrollTo(0, 0);
+    navigateTo('help');
   };
 
   const handleAddToCart = (product: Product, personalization?: string) => {
@@ -150,16 +168,22 @@ function AppContent() {
     setCartItems(prev => prev.filter(item => item.id !== id));
   };
 
+  // --- ИСПРАВЛЕННАЯ ФУНКЦИЯ НАВИГАЦИИ С ИСТОРИЕЙ БРАУЗЕРА ---
   const navigateTo = (view: ViewState, sectionId?: string) => {
     setCurrentView(view);
     window.scrollTo(0, 0);
 
-    if (view === 'home') {
-      if (window.location.hash) {
-        history.replaceState(null, '', window.location.pathname + window.location.search);
-      }
-    }
+    // Добавляем запись в историю браузера, чтобы кнопка «Назад» работала корректно
+    const urlMap: Record<ViewState, string> = {
+      home: '/',
+      catalog: '/#catalog',
+      'materials-catalog': '/materials',
+      help: '/help',
+      calc: '/calc'
+    };
     
+    window.history.pushState({ view }, '', urlMap[view] || '/');
+
     if (view === 'home' && sectionId) {
       setTimeout(() => {
         const element = document.getElementById(sectionId);
@@ -172,8 +196,7 @@ function AppContent() {
 
   const handleCategorySelect = (category: ProductCategory) => {
     setInitialCategory(category);
-    setCurrentView('catalog');
-    window.scrollTo(0, 0);
+    navigateTo('catalog');
   };
 
   const handleContactAction = (type: string, message: string = '') => {
