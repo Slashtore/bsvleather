@@ -1,19 +1,21 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { Helmet } from 'react-helmet-async'; // 🔥 1. ИМПОРТ HELMET
+import { Helmet } from 'react-helmet-async';
 import { Product, ProductCategory } from '../types';
 import { ProductCard } from './ProductCard';
 import { PRODUCTS } from '../constants';
-import { X, ShoppingBag, ArrowLeft, ChevronLeft, ChevronRight } from 'lucide-react';
+import { X, ShoppingBag, ArrowLeft, ChevronLeft, ChevronRight, Palette, CheckCircle2, MessageSquare, Stamp } from 'lucide-react';
 import { calculatePrice } from '../utils/calculatePrice';
 
 interface ProductGridProps {
-  onAddToCart: (product: Product) => void;
+  onAddToCart: (product: Product, personalization?: string) => void;
   initialCategory?: ProductCategory;
   onBackToHome?: () => void;
   onOrderCustomization?: () => void;
   onNavigateToHelp?: (section: string) => void;
   onNavigateToMaterials?: () => void;
 }
+
+const MAX_CHAT_URL = 'https://max.ru/u/f9LHodD0cOLh-Isielh0dfxWNiLgSIHSruaBU2s_ocT6nn2s903vM4VDQ2c';
 
 export const ProductGrid: React.FC<ProductGridProps> = ({ 
   onAddToCart, 
@@ -27,7 +29,11 @@ export const ProductGrid: React.FC<ProductGridProps> = ({
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [activeImageIdx, setActiveImageIdx] = useState(0);
 
-  // 🔥 ЛОГИКА ДЛЯ SEO И URL ТОВАРОВ
+  // Стейты для тиснения инициалов
+  const [isPersonalized, setIsPersonalized] = useState(false);
+  const [initials, setInitials] = useState('');
+
+  // ЛОГИКА ДЛЯ SEO И URL ТОВАРОВ
   useEffect(() => {
     const checkUrlProduct = () => {
       const params = new URLSearchParams(window.location.search);
@@ -38,6 +44,8 @@ export const ProductGrid: React.FC<ProductGridProps> = ({
         if (foundProduct) {
           setSelectedProduct(foundProduct);
           setActiveImageIdx(0);
+          setIsPersonalized(false);
+          setInitials('');
         }
       } else {
         setSelectedProduct(null);
@@ -52,6 +60,8 @@ export const ProductGrid: React.FC<ProductGridProps> = ({
   const handleOpenProduct = (product: Product) => {
     setSelectedProduct(product);
     setActiveImageIdx(0);
+    setIsPersonalized(false);
+    setInitials('');
 
     const newUrl = new URL(window.location.href);
     newUrl.searchParams.set('product', product.id);
@@ -60,6 +70,8 @@ export const ProductGrid: React.FC<ProductGridProps> = ({
 
   const handleCloseProduct = () => {
     setSelectedProduct(null);
+    setIsPersonalized(false);
+    setInitials('');
 
     const newUrl = new URL(window.location.href);
     newUrl.searchParams.delete('product');
@@ -88,43 +100,52 @@ export const ProductGrid: React.FC<ProductGridProps> = ({
     return baseProducts.filter(p => p.category === activeCategory);
   }, [activeCategory]);
 
-  const handleAddToCart = (product: Product) => {
-    onAddToCart(product);
+  // Быстрый заказ через МАКС с учетом тиснения
+  const handleQuickOrderMax = (product: Product, price: number) => {
+    const personalText = isPersonalized && initials.trim() ? `\n• Тиснение инициалов: «${initials.trim()}»` : '';
+    const textToCopy = `Здравствуйте! Хочу оформить быстрый заказ:\n• ${product.name} — ${price.toLocaleString('ru-RU')} ₽${personalText}`;
+    
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(textToCopy);
+      alert('📋 Текст заказа скопирован! Нажмите «Вставить» в открывшемся чате МАКС.');
+    }
+    
+    window.open(MAX_CHAT_URL, '_blank');
   };
 
   return (
-    <section id="catalog" className="py-24 bg-white min-h-screen">
-      <div className="container mx-auto px-6">
+    <section id="catalog" className="py-20 md:py-24 bg-stone-100/50 min-h-screen">
+      <div className="container mx-auto px-4 md:px-6">
         
-        {/* Header of the Catalog Page */}
-        <div className="flex flex-col md:flex-row justify-between items-center mb-12 gap-6 relative">
+        {/* Заголовок раздела каталога */}
+        <div className="flex flex-col md:flex-row justify-between items-center mb-10 md:mb-14 gap-6 relative">
           {onBackToHome && (
             <button 
               onClick={onBackToHome}
-              className="absolute left-0 top-0 md:top-1/2 md:-translate-y-1/2 flex items-center gap-2 text-leather-500 hover:text-leather-900 transition-colors uppercase tracking-widest text-xs font-bold"
+              className="self-start md:absolute md:left-0 md:top-1/2 md:-translate-y-1/2 flex items-center gap-2 text-stone-500 hover:text-stone-900 transition-colors uppercase tracking-widest text-xs font-bold"
             >
               <ArrowLeft size={16} />
-              <span className="hidden md:inline">На главную</span>
+              <span>На главную</span>
             </button>
           )}
 
           <div className="text-center w-full">
-            <h2 className="text-4xl md:text-5xl font-serif text-leather-900 mb-4">Каталог</h2>
-            <div className="w-24 h-1 bg-leather-300 mx-auto"></div>
+            <h2 className="text-3xl md:text-5xl font-serif text-stone-900 mb-3 tracking-tight">Каталог изделий</h2>
+            <div className="w-16 h-[2px] bg-[#e6ccb2] mx-auto"></div>
           </div>
         </div>
           
-        {/* Categories */}
-        <div className="mb-12">
-          <div className="flex flex-wrap justify-center gap-2 md:gap-4">
+        {/* Фильтр категорий */}
+        <div className="mb-10 md:mb-14 overflow-x-auto pb-2 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+          <div className="flex items-center justify-start md:justify-center gap-2 md:gap-3 min-w-max px-2">
             {[ProductCategory.ALL, ProductCategory.BELTS, ProductCategory.WALLETS, ProductCategory.COMPACT, ProductCategory.HOME, ProductCategory.ACCESSORIES, ProductCategory.MUSIC_ACCESSORIES].map((category) => (
               <button
                 key={category}
                 onClick={() => setActiveCategory(category)}
-                className={`px-4 py-2 rounded-full text-xs md:text-sm uppercase tracking-wider transition-all duration-300 border whitespace-nowrap ${
+                className={`px-4 py-2.5 rounded-full text-xs uppercase tracking-wider font-medium transition-all duration-300 border whitespace-nowrap ${
                   activeCategory === category 
-                    ? 'bg-leather-800 text-white border-leather-800 shadow-md' 
-                    : 'bg-white text-leather-600 border-leather-200 hover:border-leather-400 hover:bg-leather-50'
+                    ? 'bg-[#1a110f] text-[#e6ccb2] border-[#1a110f] shadow-lg scale-105' 
+                    : 'bg-white text-stone-600 border-stone-200/80 hover:border-stone-400 hover:bg-stone-50'
                 }`}
               >
                 {category}
@@ -133,36 +154,45 @@ export const ProductGrid: React.FC<ProductGridProps> = ({
           </div>
         </div>
 
-        {/* Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-12 animate-fade-in">
+        {/* Сетка товаров */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-10 animate-fade-in">
           {filteredProducts.map(product => (
             <ProductCard 
               key={product.id} 
               product={product} 
-              onSelect={(product) => {
-                handleOpenProduct(product);
-              }}
+              onSelect={(product) => handleOpenProduct(product)}
               onAddToCart={() => onAddToCart(product)}
             />
           ))}
         </div>
 
+        {/* Пустое состояние */}
         {filteredProducts.length === 0 && (
-           <div className="text-center py-20 text-leather-400">
-              <p className="text-xl font-serif">В этой категории пока пусто.</p>
-              <p className="text-sm mt-2">Но мы можем изготовить это для вас на заказ!</p>
+           <div className="text-center py-20 bg-white rounded-lg border border-stone-200/80 max-w-md mx-auto my-8 p-8 shadow-sm">
+              <p className="text-xl font-serif text-stone-800">В этой категории пока пусто</p>
+              <p className="text-xs text-stone-500 mt-2 leading-relaxed">
+                Но вы можете заказать индивидуальное изготовление любого изделия по вашим параметрам!
+              </p>
+              {onOrderCustomization && (
+                <button 
+                  onClick={onOrderCustomization}
+                  className="mt-6 inline-flex items-center gap-2 px-6 py-3 bg-[#1a110f] text-[#e6ccb2] text-xs font-bold uppercase tracking-wider rounded-sm hover:bg-stone-900 transition-colors"
+                >
+                  <Palette size={14} />
+                  Сделать индивидуальный заказ
+                </button>
+              )}
            </div>
         )}
 
-        {/* 🔥 Product Modal c динамическим SEO */}
+        {/* Product Modal */}
         {selectedProduct && (() => {
           const productPrice = calculatePrice(selectedProduct.recipe, selectedProduct.price, selectedProduct.name);
           const pageTitle = `${selectedProduct.name} — Купить за ${productPrice.toLocaleString('ru-RU')} ₽ | BSV Leather`;
           const pageDesc = selectedProduct.description 
-            ? `${selectedProduct.description} Авторские изделия из кожи ручной работы в Воронеже.` 
-            : `${selectedProduct.name} из натуральной кожи ручной работы. Мастерская BSV Leather, Воронеж.`;
+            ? `${selectedProduct.description} Авторские изделия из кожи растительного дубления ручной работы.` 
+            : `${selectedProduct.name} из натуральной кожи растительного дубления ручной работы. Мастерская BSV Leather.`;
 
-          // Схема Schema.org для карточки товара
           const schemaData = {
             '@context': 'https://schema.org/',
             '@type': 'Product',
@@ -178,42 +208,41 @@ export const ProductGrid: React.FC<ProductGridProps> = ({
               priceCurrency: 'RUB',
               price: productPrice,
               availability: 'https://schema.org/InStock',
-              url: 'https://bsvleather.ru/#catalog',
+              url: window.location.href,
             },
           };
 
           return (
             <>
-              {/* 🔥 SEO И OPEN GRAPH ТЕГИ ДЛЯ ОТКРЫТОГО ТОВАРА */}
               <Helmet>
                 <title>{pageTitle}</title>
                 <meta name="description" content={pageDesc} />
-                
-                {/* Open Graph (Telegram, VK, WhatsApp) */}
                 <meta property="og:type" content="product" />
                 <meta property="og:title" content={`${selectedProduct.name} — BSV Leather`} />
-                <meta property="og:description" content={`Цена: ${productPrice.toLocaleString('ru-RU')} ₽. Натуральная кожа, ручная работа.`} />
+                <meta property="og:description" content={`Цена: ${productPrice.toLocaleString('ru-RU')} ₽. Кожа растительного дубления, ручной седельный шов.`} />
                 <meta property="og:image" content={selectedProduct.imageUrl} />
                 <meta property="product:price:amount" content={String(productPrice)} />
                 <meta property="product:price:currency" content="RUB" />
-
-                {/* Микроразметка Schema.org */}
                 <script type="application/ld+json">
                   {JSON.stringify(schemaData)}
                 </script>
               </Helmet>
 
-              <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in" onClick={handleCloseProduct}>
-                <div className="bg-white w-full max-w-4xl max-h-[90vh] overflow-y-auto rounded-sm shadow-2xl flex flex-col md:flex-row relative" onClick={e => e.stopPropagation()}>
+              {/* Модальное окно */}
+              <div className="fixed inset-0 z-[60] flex items-center justify-center p-3 md:p-6 bg-black/70 backdrop-blur-md animate-fade-in" onClick={handleCloseProduct}>
+                <div className="bg-white w-full max-w-4xl max-h-[92vh] overflow-y-auto rounded-md shadow-2xl flex flex-col md:flex-row relative border border-stone-200" onClick={e => e.stopPropagation()}>
+                  
+                  {/* Кнопка закрытия */}
                   <button 
                     onClick={handleCloseProduct}
-                    className="absolute top-4 right-4 p-2 bg-white/80 rounded-full hover:bg-leather-100 transition-colors z-10 text-leather-900"
+                    className="absolute top-4 right-4 p-2.5 bg-stone-900/10 hover:bg-stone-900/20 text-stone-900 rounded-full transition-colors z-20 backdrop-blur-md"
+                    title="Закрыть"
                   >
-                    <X size={24} />
+                    <X size={20} />
                   </button>
                   
-                  {/* === ЛЕВАЯ ЧАСТЬ: ГАЛЕРЕЯ === */}
-                  <div className="w-full md:w-1/2 bg-white flex flex-col">
+                  {/* ЛЕВАЯ ЧАСТЬ: ГАЛЕРЕЯ (фон изменен на bg-white) */}
+                  <div className="w-full md:w-1/2 bg-white flex flex-col justify-between border-b md:border-b-0 md:border-r border-stone-200">
                     {(() => {
                       const galleryImages: string[] = [
                         selectedProduct.imageUrl,
@@ -222,11 +251,11 @@ export const ProductGrid: React.FC<ProductGridProps> = ({
 
                       return (
                         <>
-                          <div className="relative aspect-square md:aspect-[4/5] overflow-hidden">
+                          <div className="relative aspect-square md:aspect-[4/5] overflow-hidden bg-white">
                             <img 
                               key={galleryImages[activeImageIdx]}
                               src={galleryImages[activeImageIdx]} 
-                              alt={`${selectedProduct.name} — фото ${activeImageIdx + 1} из натуральной кожи ручной работы`} 
+                              alt={`${selectedProduct.name} — фото ${activeImageIdx + 1} из натуральной кожи`} 
                               className="w-full h-full object-cover transition-opacity duration-300"
                             />
                             
@@ -234,14 +263,14 @@ export const ProductGrid: React.FC<ProductGridProps> = ({
                               <>
                                 <button 
                                   onClick={() => setActiveImageIdx(i => Math.max(0, i - 1))}
-                                  className="absolute left-3 top-1/2 -translate-y-1/2 p-2 bg-white/90 rounded-full hover:bg-white shadow-sm transition-all disabled:opacity-30"
+                                  className="absolute left-3 top-1/2 -translate-y-1/2 p-2 bg-white/90 hover:bg-white text-stone-800 rounded-full shadow-md transition-all disabled:opacity-30"
                                   disabled={activeImageIdx === 0}
                                 >
                                   <ChevronLeft size={20} />
                                 </button>
                                 <button 
                                   onClick={() => setActiveImageIdx(i => Math.min(galleryImages.length - 1, i + 1))}
-                                  className="absolute right-3 top-1/2 -translate-y-1/2 p-2 bg-white/90 rounded-full hover:bg-white shadow-sm transition-all disabled:opacity-30"
+                                  className="absolute right-3 top-1/2 -translate-y-1/2 p-2 bg-white/90 hover:bg-white text-stone-800 rounded-full shadow-md transition-all disabled:opacity-30"
                                   disabled={activeImageIdx === galleryImages.length - 1}
                                 >
                                   <ChevronRight size={20} />
@@ -251,15 +280,15 @@ export const ProductGrid: React.FC<ProductGridProps> = ({
                           </div>
 
                           {galleryImages.length > 1 && (
-                            <div className="flex gap-2 p-4 bg-white">
+                            <div className="flex gap-2 p-4 bg-white border-t border-stone-200/80 overflow-x-auto">
                               {galleryImages.map((img, idx) => (
                                 <button
                                   key={idx}
                                   onClick={() => setActiveImageIdx(idx)}
-                                  className={`w-16 h-16 rounded-sm overflow-hidden border-2 transition-all flex-shrink-0 ${
+                                  className={`w-14 h-14 rounded-sm overflow-hidden border-2 transition-all flex-shrink-0 ${
                                     idx === activeImageIdx 
-                                      ? 'border-leather-900 scale-105 shadow-md' 
-                                      : 'border-leather-200 opacity-60 hover:opacity-100 hover:border-leather-400'
+                                      ? 'border-[#1a110f] scale-105 shadow-md' 
+                                      : 'border-stone-200 opacity-60 hover:opacity-100'
                                   }`}
                                 >
                                   <img 
@@ -276,87 +305,156 @@ export const ProductGrid: React.FC<ProductGridProps> = ({
                     })()}
                   </div>
                   
-                  {/* === ПРАВАЯ ЧАСТЬ: ИНФО === */}
-                  <div className="w-full md:w-1/2 p-8 md:p-12 flex flex-col justify-center">
-                    <div className="text-sm text-leather-600 font-bold uppercase tracking-widest mb-2">
-                      {selectedProduct.category}
-                    </div>
-                    <h3 className="text-3xl md:text-4xl font-serif text-leather-900 mb-6">
-                      {selectedProduct.name}
-                    </h3>
-                    <p className="text-leather-800 leading-relaxed mb-6">
-                      {selectedProduct.description}
-                    </p>
-                    
-                    <div className="mb-8">
-                      <h4 className="text-sm font-bold uppercase text-leather-900 mb-3">Особенности:</h4>
-                      <ul className="space-y-2">
-                        {selectedProduct.details.map((detail, idx) => (
-                          <li key={idx} className="flex items-center text-leather-700 text-sm">
-                            <span className="w-1.5 h-1.5 bg-leather-400 rounded-full mr-3"></span>
-                            {detail}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                    
-                    {selectedProduct.category !== ProductCategory.CARE && (
-                      <div className="p-4 bg-leather-50 border border-leather-200 mb-8 rounded-sm">
-                         <p className="text-xs text-leather-500 italic">
-                            💡 Понравилась модель, но хотите другой цвет? 
-                            <button 
-                              className="underline text-leather-800 ml-1 font-bold hover:text-leather-600 transition-colors" 
-                              onClick={() => {
-                                 handleCloseProduct();
-                                 if (onOrderCustomization) onOrderCustomization();
-                              }}
-                            >
-                              Закажите индивидуальный 3D макет
-                            </button>
-                         </p>
+                  {/* ПРАВАЯ ЧАСТЬ: ИНФОРМАЦИЯ */}
+                  <div className="w-full md:w-1/2 p-6 md:p-10 flex flex-col justify-between">
+                    <div>
+                      {/* Категория */}
+                      <div className="text-[10px] font-bold uppercase tracking-[0.2em] text-stone-500 bg-stone-100 px-2.5 py-1 rounded-sm w-fit mb-3">
+                        {selectedProduct.category}
                       </div>
-                    )}
 
-                    <details className="mb-6 border-t border-b border-leather-100 py-4 group">
-                      <summary className="cursor-pointer text-sm font-bold text-leather-800 hover:text-leather-600 list-none flex justify-between items-center select-none">
-                        Условия заказа и доставки
-                        <span className="transition-transform group-open:rotate-180 text-leather-400">▼</span>
-                      </summary>
-                      <div className="mt-3 text-sm text-leather-600 space-y-2">
-                        <p>• Изготовление вручную, отправка в течение 7 рабочих дней.</p>
-                        <p>• Бесплатная кастомизация: выбор цвета кожи/нити, гравировка инициалов.</p>
-                        <p>• Индивидуальные заказы могут занять чуть больше времени, так как изготавливаются с нуля, а не снимаются с полки.</p>
-                        
-                        <div className="pt-3 mt-3 border-t border-leather-100 flex flex-wrap gap-x-5 gap-y-2">
-                          <button onClick={() => { handleCloseProduct(); onNavigateToHelp?.('PAYMENT'); }} className="text-xs font-bold text-leather-700 underline hover:text-leather-900 text-left">
-                            Подробнее про оплату и доставку →
-                          </button>
-                          <button onClick={() => { handleCloseProduct(); onNavigateToHelp?.('RETURNS'); }} className="text-xs font-bold text-leather-700 underline hover:text-leather-900 text-left">
-                            Подробнее про возврат →
-                          </button>
-                          <button onClick={() => { handleCloseProduct(); onNavigateToMaterials?.(); }} className="text-xs font-bold text-leather-700 underline hover:text-leather-900 text-left">
-                            Подробнее про материалы →
-                          </button>
+                      {/* Название */}
+                      <h3 className="text-2xl md:text-3xl font-serif text-stone-900 mb-4 font-medium tracking-tight">
+                        {selectedProduct.name}
+                      </h3>
+
+                      {/* Описание */}
+                      <p className="text-stone-600 text-sm leading-relaxed mb-6 font-light">
+                        {selectedProduct.description}
+                      </p>
+                      
+                      {/* Особенности */}
+                      <div className="mb-6">
+                        <h4 className="text-xs font-bold uppercase tracking-wider text-stone-900 mb-3">Особенности изделия:</h4>
+                        <ul className="space-y-2">
+                          {selectedProduct.details.map((detail, idx) => (
+                            <li key={idx} className="flex items-start text-stone-700 text-xs">
+                              <CheckCircle2 size={14} className="text-[#885036] mr-2 shrink-0 mt-0.5" />
+                              <span>{detail}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+
+                      {/* ОПЦИЯ ПЕРСОНАЛИЗАЦИИ: ТИСНЕНИЕ ИНИЦИАЛОВ */}
+                      {selectedProduct.category !== ProductCategory.CARE && (
+                        <div className="p-4 bg-stone-50 border border-stone-200 rounded-sm mb-6 space-y-3">
+                          <label className="flex items-start gap-2.5 cursor-pointer select-none">
+                            <input 
+                              type="checkbox" 
+                              checked={isPersonalized}
+                              onChange={(e) => setIsPersonalized(e.target.checked)}
+                              className="w-4 h-4 mt-0.5 accent-[#885036] rounded cursor-pointer"
+                            />
+                            <div>
+                              <span className="text-xs font-bold text-stone-900 flex items-center gap-1.5">
+                                <Stamp size={14} className="text-[#885036]" />
+                                Добавить бесплатное тиснение инициалов
+                              </span>
+                              <span className="text-[11px] text-stone-500 block mt-0.5">
+                                Персонализируем изделие горячим тиснением (например: «А. В.»)
+                              </span>
+                            </div>
+                          </label>
+
+                          {isPersonalized && (
+                            <div className="pt-2 pl-6 animate-fade-in">
+                              <input 
+                                type="text"
+                                placeholder="Например: А. В."
+                                value={initials}
+                                onChange={(e) => setInitials(e.target.value)}
+                                maxLength={12}
+                                className="w-full px-3 py-2 text-xs bg-white border border-stone-300 rounded-sm focus:outline-none focus:border-[#885036] text-stone-900"
+                              />
+                              <p className="text-[10px] text-stone-400 mt-1">
+                                Латиница или кириллица, до 12 символов с точками.
+                              </p>
+                            </div>
+                          )}
                         </div>
-                      </div>
-                    </details>
+                      )}
+                      
+                      {/* Блок кастомизации под заказ */}
+                      {selectedProduct.category !== ProductCategory.CARE && (
+                        <div className="p-4 bg-amber-50/80 border border-amber-200/80 rounded-sm mb-6 text-xs text-stone-800">
+                            <p className="leading-relaxed">
+                              💡 Хотите такой же, но в другом цвете кожи или нитей?
+                              <button 
+                                className="block mt-1 font-bold text-amber-950 underline hover:text-amber-800 transition-colors text-left" 
+                                onClick={() => {
+                                  handleCloseProduct();
+                                  if (onOrderCustomization) onOrderCustomization();
+                                }}
+                              >
+                                Запросить персональный выбор материалов →
+                              </button>
+                            </p>
+                        </div>
+                      )}
 
-                    <div className="flex items-center justify-between mt-auto pt-6 border-t border-leather-200">
-                      <span className="text-3xl font-serif text-leather-900">
-                        {productPrice.toLocaleString('ru-RU')} ₽
-                      </span>
-                      <button 
-                         onClick={() => {
-                            handleAddToCart(selectedProduct);
-                            handleCloseProduct();
-                         }}
-                         className="bg-leather-800 text-white px-8 py-3 uppercase tracking-wider text-xs font-bold hover:bg-leather-700 transition-colors flex items-center gap-2"
-                      >
-                        <ShoppingBag size={18} />
-                        <span>В корзину</span>
-                      </button>
+                      {/* Детали доставки / возврата */}
+                      <details className="mb-6 border-t border-b border-stone-200/80 py-3 group">
+                        <summary className="cursor-pointer text-xs font-bold text-stone-800 hover:text-stone-950 list-none flex justify-between items-center select-none">
+                          Доставка, гарантия и возврат
+                          <span className="transition-transform group-open:rotate-180 text-stone-400">▼</span>
+                        </summary>
+                        <div className="mt-3 text-xs text-stone-600 space-y-2 leading-relaxed">
+                          <p>• Ручная сборка и отправка мастерской в течение 5–7 рабочих дней.</p>
+                          <p>• Бесплатное тиснение инициалов по вашему желанию.</p>
+                          <p>• Пожизненная гарантия на целостность седельного шва.</p>
+                          
+                          <div className="pt-3 mt-3 border-t border-stone-100 flex flex-wrap gap-x-4 gap-y-2">
+                            <button onClick={() => { handleCloseProduct(); onNavigateToHelp?.('PAYMENT'); }} className="text-[11px] font-bold text-stone-700 underline hover:text-stone-950 text-left">
+                              Оплата и доставка →
+                            </button>
+                            <button onClick={() => { handleCloseProduct(); onNavigateToHelp?.('RETURNS'); }} className="text-[11px] font-bold text-stone-700 underline hover:text-stone-950 text-left">
+                              Условия возврата →
+                            </button>
+                            <button onClick={() => { handleCloseProduct(); onNavigateToMaterials?.(); }} className="text-[11px] font-bold text-stone-700 underline hover:text-stone-950 text-left">
+                              Каталог кожи →
+                            </button>
+                          </div>
+                        </div>
+                      </details>
                     </div>
+
+                    {/* Подвал модалки: Цена и Кнопки заказа */}
+                    <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-stone-200 mt-2">
+                      <div className="w-full sm:w-auto text-left">
+                        <span className="text-2xl md:text-3xl font-serif text-stone-950 font-bold tracking-tight whitespace-nowrap">
+                          {productPrice.toLocaleString('ru-RU')} ₽
+                        </span>
+                      </div>
+                      
+                      <div className="flex items-center gap-2.5 w-full sm:w-auto justify-end">
+                        {/* Кнопка быстрого заказа через МАКС */}
+                        <button
+                          onClick={() => handleQuickOrderMax(selectedProduct, productPrice)}
+                          className="border border-stone-300 hover:border-stone-800 text-stone-800 hover:bg-stone-50 transition-all px-3.5 py-3 rounded-sm uppercase tracking-wider text-xs font-bold flex items-center justify-center gap-1.5 whitespace-nowrap shrink-0"
+                          title="Быстрый заказ через мессенджер МАКС"
+                        >
+                          <MessageSquare size={16} className="text-[#885036]" />
+                          <span>В МАКС</span>
+                        </button>
+
+                        {/* Кнопка добавления в корзину */}
+                        <button 
+                          onClick={() => {
+                            const personalizationText = isPersonalized && initials.trim() ? `Тиснение: ${initials.trim()}` : undefined;
+                            onAddToCart(selectedProduct, personalizationText);
+                            handleCloseProduct();
+                          }}
+                          className="flex-1 sm:flex-none bg-[#1a110f] text-[#e6ccb2] hover:bg-stone-900 transition-colors px-5 md:px-7 py-3 rounded-sm uppercase tracking-wider text-xs font-bold flex items-center justify-center gap-2 shadow-md border border-stone-800 whitespace-nowrap"
+                        >
+                          <ShoppingBag size={16} />
+                          <span>В корзину</span>
+                        </button>
+                      </div>
+                    </div>
+
                   </div>
+
                 </div>
               </div>
             </>

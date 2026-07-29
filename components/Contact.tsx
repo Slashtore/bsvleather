@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ContactFormState } from '../types';
-import { Mail, Phone, MapPin, Send, MessageCircle } from 'lucide-react';
+import { Mail, MessageCircle, MapPin, Send, CheckCircle2, Loader2 } from 'lucide-react';
 import { CONTACT_CONFIG } from '../constants';
 
 interface ContactProps {
@@ -18,9 +18,9 @@ export const Contact: React.FC<ContactProps> = ({ prefill }) => {
     type: 'Индивидуальный заказ'
   });
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const [loading, setLoading] = useState(false); // 🔥 Новое: состояние загрузки
+  const [loading, setLoading] = useState(false);
 
-  // Update form when prefill data changes
+  // Обновление формы при передаче предзаполненных данных (например, при нажатии "Заказать кастом")
   useEffect(() => {
     if (prefill) {
       setFormState(prev => ({
@@ -44,9 +44,8 @@ export const Contact: React.FC<ContactProps> = ({ prefill }) => {
         body: JSON.stringify({
           name: formState.name,
           email: formState.email,
-          type: formState.type, // Тема обращения
+          type: formState.type,
           message: formState.message,
-          // Служебная информация
           subject: `📩 ${formState.type} — ${formState.name}`,
           page: window.location.href
         }),
@@ -66,156 +65,207 @@ export const Contact: React.FC<ContactProps> = ({ prefill }) => {
     }
   };
 
-    useEffect(() => {
+  useEffect(() => {
     if (isSubmitted) {
       const timer = setTimeout(() => {
         setIsSubmitted(false);
-      }, 4000); // 4 секунды
+      }, 5000);
       return () => clearTimeout(timer);
     }
   }, [isSubmitted]);
 
   return (
-    <section id="contact" className="py-24 bg-leather-900 text-leather-50">
-      <div className="container mx-auto px-6">
-        <div className="flex flex-col lg:flex-row gap-16">
+    <section id="contact" className="py-20 md:py-24 bg-[#14110f] text-stone-100 relative overflow-hidden">
+      <div className="container mx-auto px-6 relative z-10">
+        <div className="flex flex-col lg:flex-row gap-12 lg:gap-16 items-stretch">
           
-          <div className="w-full lg:w-1/3">
-            <h2 className="text-4xl font-serif text-white mb-6">Связаться</h2>
-            <p className="text-leather-200 mb-10 leading-relaxed font-light">
-              Готовы заказать уникальное изделие или у вас есть вопросы? 
-              Заполните форму, и я свяжусь с вами в ближайшее время для обсуждения деталей.
-            </p>
-            
-            <div className="space-y-6">
-              <div className="flex items-center gap-4">
-                <div className="w-10 h-10 rounded-full bg-leather-800 flex items-center justify-center text-leather-200">
-                  <MessageCircle size={20} />
-                </div>
-                <div>
-                  <p className="text-xs text-leather-400 uppercase tracking-wider">{CONTACT_CONFIG.MESSENGER_LABEL} / Телефон</p>
-                  <p className="text-white font-medium">{CONTACT_CONFIG.PHONE}</p>
-                  <a href={CONTACT_CONFIG.MESSENGER_URL} target="_blank" rel="noreferrer" className="text-xs text-[#2AABEE] hover:text-white transition-colors underline">
-                    Написать в {CONTACT_CONFIG.MESSENGER_LABEL}
-                  </a>
-                </div>
-              </div>
-              
-              <div className="flex items-center gap-4">
-                <div className="w-10 h-10 rounded-full bg-leather-800 flex items-center justify-center text-leather-200">
-                  <Mail size={20} />
-                </div>
-                <div>
-                  <p className="text-xs text-leather-400 uppercase tracking-wider">Email</p>
-                  <p className="text-white font-medium">{CONTACT_CONFIG.EMAIL}</p>
-                </div>
+          {/* ЛЕВАЯ КОЛОНКА: Контактная информация */}
+          <div className="w-full lg:w-1/3 flex flex-col justify-between">
+            <div>
+              <div className="flex items-center gap-2 mb-3">
+                <span className="w-6 h-px bg-[#e6ccb2]/50" />
+                <span className="text-[#e6ccb2]/80 font-mono text-xs uppercase tracking-[0.25em]">
+                  Контакты
+                </span>
               </div>
 
-              <div className="flex items-center gap-4">
-                <div className="w-10 h-10 rounded-full bg-leather-800 flex items-center justify-center text-leather-200">
-                  <MapPin size={20} />
+              <h2 className="text-3xl md:text-4xl font-serif text-stone-100 mb-4 tracking-tight font-medium">
+                Связаться с мастером
+              </h2>
+              
+              <p className="text-stone-300/80 mb-10 leading-relaxed font-light text-sm md:text-base">
+                Готовы заказать уникальное изделие или у вас есть вопросы по выбору кожи? 
+                Заполните форму, и я свяжусь с вами в течение дня для обсуждения деталей.
+              </p>
+              
+              <div className="space-y-6">
+                {/* Телефон / Мессенджер */}
+                <div className="flex items-start gap-4">
+                  <div className="w-10 h-10 rounded-full bg-stone-900/90 border border-stone-800 flex items-center justify-center text-[#e6ccb2] shrink-0 mt-0.5">
+                    <MessageCircle size={18} />
+                  </div>
+                  <div>
+                    <p className="text-[10px] text-stone-400 font-bold uppercase tracking-wider mb-0.5">
+                      {CONTACT_CONFIG.MESSENGER_LABEL} / Телефон
+                    </p>
+                    <p className="text-stone-100 font-medium text-sm md:text-base mb-0.5">
+                      {CONTACT_CONFIG.PHONE}
+                    </p>
+                    <a 
+                      href={CONTACT_CONFIG.MESSENGER_URL} 
+                      target="_blank" 
+                      rel="noreferrer" 
+                      className="text-xs text-[#e6ccb2] hover:text-white transition-colors underline decoration-[#e6ccb2]/40"
+                    >
+                      Написать в {CONTACT_CONFIG.MESSENGER_LABEL} →
+                    </a>
+                  </div>
                 </div>
-                <div>
-                  <p className="text-xs text-leather-400 uppercase tracking-wider">Мастерская</p>
-                  <p className="text-white font-medium">{CONTACT_CONFIG.ADDRESS}</p>
+                
+                {/* Email */}
+                <div className="flex items-start gap-4">
+                  <div className="w-10 h-10 rounded-full bg-stone-900/90 border border-stone-800 flex items-center justify-center text-[#e6ccb2] shrink-0 mt-0.5">
+                    <Mail size={18} />
+                  </div>
+                  <div>
+                    <p className="text-[10px] text-stone-400 font-bold uppercase tracking-wider mb-0.5">Email</p>
+                    <p className="text-stone-100 font-medium text-sm md:text-base">
+                      {CONTACT_CONFIG.EMAIL}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Адрес */}
+                <div className="flex items-start gap-4">
+                  <div className="w-10 h-10 rounded-full bg-stone-900/90 border border-stone-800 flex items-center justify-center text-[#e6ccb2] shrink-0 mt-0.5">
+                    <MapPin size={18} />
+                  </div>
+                  <div>
+                    <p className="text-[10px] text-stone-400 font-bold uppercase tracking-wider mb-0.5">Мастерская</p>
+                    <p className="text-stone-100 font-medium text-sm md:text-base">
+                      {CONTACT_CONFIG.ADDRESS}
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Правая колонка: Фиксированная высота + абсолютные панели */}
-          <div className="w-full lg:w-2/3 bg-white rounded-sm shadow-xl text-leather-900 relative h-[620px] md:h-[560px] overflow-hidden">
+          {/* ПРАВАЯ КОЛОНКА: Форма с динамической панелью */}
+          <div className="w-full lg:w-2/3 bg-white rounded-sm shadow-2xl text-stone-900 relative min-h-[560px] md:min-h-[520px] overflow-hidden border border-stone-200">
             
-            {/*  СОСТОЯНИЕ 1: ФОРМА */}
+            {/* СОСТОЯНИЕ 1: ФОРМА ОПРАВКИ */}
             <form 
               onSubmit={handleSubmit} 
-              className={`absolute inset-0 p-8 md:p-12 flex flex-col space-y-6 transition-all duration-500 ease-out ${
+              className={`absolute inset-0 p-6 md:p-10 flex flex-col justify-between transition-all duration-500 ease-out ${
                 isSubmitted 
                   ? 'opacity-0 translate-y-4 pointer-events-none' 
                   : 'opacity-100 translate-y-0 pointer-events-auto'
               }`}
             >
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <label className="block text-xs uppercase tracking-wider text-leather-600 font-bold mb-2">Ваше имя</label>
-                  <input 
-                    type="text" 
-                    required
-                    disabled={loading}
-                    className="w-full bg-leather-50 border border-leather-200 px-4 py-3 focus:outline-none focus:border-leather-500 transition-colors text-leather-900 disabled:opacity-50"
-                    value={formState.name}
-                    onChange={(e) => setFormState({...formState, name: e.target.value})}
-                  />
+              <div className="space-y-5">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                  <div>
+                    <label className="block text-[10px] uppercase tracking-wider text-stone-600 font-bold mb-1.5">
+                      Ваше имя *
+                    </label>
+                    <input 
+                      type="text" 
+                      required
+                      disabled={loading}
+                      placeholder="Как к вам обращаться"
+                      className="w-full bg-stone-50 border border-stone-200/90 px-4 py-3 rounded-sm focus:outline-none focus:border-stone-800 focus:bg-white transition-colors text-stone-900 text-sm disabled:opacity-50"
+                      value={formState.name}
+                      onChange={(e) => setFormState({...formState, name: e.target.value})}
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[10px] uppercase tracking-wider text-stone-600 font-bold mb-1.5">
+                      Email *
+                    </label>
+                    <input 
+                      type="email" 
+                      required
+                      disabled={loading}
+                      placeholder="example@mail.ru"
+                      className="w-full bg-stone-50 border border-stone-200/90 px-4 py-3 rounded-sm focus:outline-none focus:border-stone-800 focus:bg-white transition-colors text-stone-900 text-sm disabled:opacity-50"
+                      value={formState.email}
+                      onChange={(e) => setFormState({...formState, email: e.target.value})}
+                    />
+                  </div>
                 </div>
+                
                 <div>
-                  <label className="block text-xs uppercase tracking-wider text-leather-600 font-bold mb-2">Email</label>
-                  <input 
-                    type="email" 
-                    required
+                  <label className="block text-[10px] uppercase tracking-wider text-stone-600 font-bold mb-1.5">
+                    Тема обращения
+                  </label>
+                  <select 
                     disabled={loading}
-                    className="w-full bg-leather-50 border border-leather-200 px-4 py-3 focus:outline-none focus:border-leather-500 transition-colors text-leather-900 disabled:opacity-50"
-                    value={formState.email}
-                    onChange={(e) => setFormState({...formState, email: e.target.value})}
+                    className="w-full bg-stone-50 border border-stone-200/90 px-4 py-3 rounded-sm focus:outline-none focus:border-stone-800 focus:bg-white transition-colors text-stone-900 text-sm disabled:opacity-50"
+                    value={formState.type}
+                    onChange={(e) => setFormState({...formState, type: e.target.value})}
+                  >
+                    <option>Индивидуальный заказ</option>
+                    <option>Подарочный сертификат</option>
+                    <option>Заказ 3D макета (Визуализация)</option>
+                    <option>Покупка из наличия</option>
+                    <option>Вопрос мастеру</option>
+                    <option>Сотрудничество</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-[10px] uppercase tracking-wider text-stone-600 font-bold mb-1.5">
+                    Сообщение *
+                  </label>
+                  <textarea 
+                    required
+                    rows={4}
+                    disabled={loading}
+                    placeholder="Опишите ваши пожелания, размеры или вопрос..."
+                    className="w-full bg-stone-50 border border-stone-200/90 px-4 py-3 rounded-sm focus:outline-none focus:border-stone-800 focus:bg-white transition-colors resize-none text-stone-900 text-sm disabled:opacity-50"
+                    value={formState.message}
+                    onChange={(e) => setFormState({...formState, message: e.target.value})}
                   />
                 </div>
               </div>
-              
-              <div>
-                <label className="block text-xs uppercase tracking-wider text-leather-600 font-bold mb-2">Тема</label>
-                <select 
+
+              <div className="pt-4">
+                <button 
+                  type="submit"
                   disabled={loading}
-                  className="w-full bg-leather-50 border border-leather-200 px-4 py-3 focus:outline-none focus:border-leather-500 transition-colors text-leather-900 disabled:opacity-50"
-                  value={formState.type}
-                  onChange={(e) => setFormState({...formState, type: e.target.value})}
+                  className="w-full md:w-auto bg-[#1a110f] text-[#e6ccb2] px-10 py-4 uppercase tracking-widest font-bold text-xs hover:bg-stone-900 transition-all shadow-lg border border-stone-800 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 rounded-sm"
                 >
-                  <option>Индивидуальный заказ</option>
-                  <option>Подарочный сертификат</option>
-                  <option>Заказ 3D макета (Визуализация)</option>
-                  <option>Покупка из наличия</option>
-                  <option>Вопрос мастеру</option>
-                  <option>Сотрудничество</option>
-                </select>
+                  {loading ? (
+                    <>
+                      <Loader2 size={16} className="animate-spin" />
+                      <span>Отправка...</span>
+                    </>
+                  ) : (
+                    <>
+                      <span>Отправить сообщение</span>
+                      <Send size={15} />
+                    </>
+                  )}
+                </button>
               </div>
-
-              <div>
-                <label className="block text-xs uppercase tracking-wider text-leather-600 font-bold mb-2">Сообщение</label>
-                <textarea 
-                  required
-                  rows={4}
-                  disabled={loading}
-                  className="w-full bg-leather-50 border border-leather-200 px-4 py-3 focus:outline-none focus:border-leather-500 transition-colors resize-none text-leather-900 disabled:opacity-50"
-                  value={formState.message}
-                  onChange={(e) => setFormState({...formState, message: e.target.value})}
-                ></textarea>
-              </div>
-
-              <button 
-                type="submit"
-                disabled={loading}
-                className="w-full md:w-auto bg-leather-800 text-white px-10 py-4 uppercase tracking-widest font-bold hover:bg-leather-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 mt-auto"
-              >
-                {loading ? (
-                  <>Отправка...</>
-                ) : (
-                  <>
-                    <span>Отправить</span>
-                    <Send size={18} />
-                  </>
-                )}
-              </button>
             </form>
 
-            {/* 🔹 СОСТОЯНИЕ 2: УСПЕХ */}
+            {/* СОСТОЯНИЕ 2: УСПЕШНАЯ ОТПРАВКА */}
             <div className={`absolute inset-0 p-8 md:p-12 flex flex-col items-center justify-center text-center transition-all duration-500 ease-out ${
               isSubmitted 
                 ? 'opacity-100 translate-y-0 pointer-events-auto' 
                 : 'opacity-0 -translate-y-4 pointer-events-none'
             }`}>
-              <div className="w-20 h-20 bg-[#2AABEE]/10 rounded-full flex items-center justify-center text-[#2AABEE] mb-6">
-                <Send size={32} />
+              <div className="w-20 h-20 bg-emerald-50 rounded-full flex items-center justify-center text-emerald-700 mb-6 border border-emerald-200/80 shadow-sm">
+                <CheckCircle2 size={40} strokeWidth={1.5} />
               </div>
-              <h3 className="text-2xl font-bold mb-2">Спасибо за заявку!</h3>
-              <p className="text-leather-600">Я свяжусь с вами в течение 24 часов.</p>
+              <h3 className="text-2xl font-serif font-medium text-stone-900 mb-2">
+                Заявка успешно отправлена!
+              </h3>
+              <p className="text-stone-600 text-sm max-w-sm leading-relaxed font-light">
+                Спасибо за обращение. Я внимательно изучу ваши пожелания и свяжусь с вами в ближайшее время.
+              </p>
             </div>
 
           </div>

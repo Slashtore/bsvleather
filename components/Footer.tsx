@@ -3,7 +3,7 @@ import { Logo } from './Logo';
 import { InfoModal } from './InfoModal';
 import { DELIVERY_INFO, WARRANTY_INFO, CARE_INFO, CONTACT_CONFIG } from '../constants';
 
-// Custom VK Icon component since it's not in standard Lucide set
+// Кастомная иконка VK
 const VkIcon = ({ size = 24, className = "" }: { size?: number, className?: string }) => (
   <svg 
     xmlns="http://www.w3.org/2000/svg" 
@@ -18,7 +18,7 @@ const VkIcon = ({ size = 24, className = "" }: { size?: number, className?: stri
   </svg>
 );
 
-// Custom Dzen Icon component
+// Кастомная иконка Яндекс Дзен
 const DzenIcon = ({ size = 24, className = "" }: { size?: number, className?: string }) => (
   <svg 
     xmlns="http://www.w3.org/2000/svg" 
@@ -32,7 +32,25 @@ const DzenIcon = ({ size = 24, className = "" }: { size?: number, className?: st
   </svg>
 );
 
-// Max Icon - cleaned, no circle background
+// Новая иконка Instagram из вашего SVG (CorelDRAW)
+const InstagramIcon = ({ size = 24, className = "" }: { size?: number, className?: string }) => (
+  <svg 
+    xmlns="http://www.w3.org/2000/svg" 
+    width={size} 
+    height={size} 
+    viewBox="0 0 1400.99 1400.9" 
+    fill="currentColor"
+    style={{ fillRule: 'evenodd', clipRule: 'evenodd' } as any}
+    className={className}
+  >
+    <g>
+      <path fill="currentColor" d="M410.43 2.63c96.65,-3.34 193.38,-2.3 290.07,-2.63 97.27,0.33 194.55,-0.75 291.78,2.67 77.57,2.5 157.76,5.7 229.38,38.95 67.78,30.78 122.31,90.11 147.01,160.43 28.08,73.94 27.29,154.14 30.45,232.04 2.84,127.56 1.55,255.2 1.75,382.81 -0.29,65.36 -0.41,130.76 -3.45,196.09 -2.09,65.32 -6.79,132.1 -31.62,193.34 -28.58,74.94 -91.57,135.93 -167.22,162.43 -72.45,27.37 -150.89,27.24 -227.17,30.2 -109.65,2.79 -219.34,1.67 -328.98,1.91 -81.9,-0.24 -163.81,0.26 -245.63,-3.08 -70.32,-2.29 -142.6,-6.37 -208.13,-34.45 -70.4,-28.75 -127.85,-88.03 -154.38,-159.3 -21.38,-54.12 -27.67,-112.73 -29.87,-170.47 -5.17,-104.03 -4.04,-208.22 -4.42,-312.32 0.33,-98.44 -0.62,-196.97 2.12,-295.41 2.84,-75.19 3.17,-152.51 30.25,-223.88 22.54,-64.57 70.49,-119.43 130.31,-152.18 75.78,-40.7 163.68,-44.74 247.75,-47.15l0 0zm712.49 146.18c-49.53,15.37 -80.77,71.94 -66.82,122.06 11.79,51.53 67.91,86.98 119.56,75.03 55,-9.79 93.57,-70.07 78.82,-124.19 -12.08,-56.36 -77.23,-92.73 -131.56,-72.9l0 0zm-478.41 117.39c-92.32,11.54 -180.3,53.91 -247.25,118.44 -70.78,67.7 -117.89,159.72 -130.64,256.91 -12.79,93.74 5.5,191.59 52.45,273.83 49.07,87.69 129.43,157.26 223.21,193.42 100.52,39.24 215.71,39.29 316.28,0.09 117.89,-45.12 213.67,-143.81 255.07,-263.12 34.87,-98.65 32.75,-209.84 -6.16,-307.03 -38.45,-97.32 -113.11,-179.76 -206.3,-227.42 -78.23,-40.87 -169.18,-56.41 -256.66,-45.12z"/>
+    </g>
+    <path fill="currentColor" d="M648.3 420.09c59.28,-11.08 122.02,-2.83 176.26,23.58 52.95,25.46 97.48,67.86 125.81,119.31 33.25,59.87 43.49,131.98 28.62,198.8 -14.08,65.36 -52.41,125.06 -105.65,165.47 -83.9,65.49 -205.38,76.9 -300.11,28.41 -62.82,-31.12 -113.27,-86.31 -138.47,-151.76 -25.37,-64.53 -25.87,-138.48 -1.38,-203.34 33.66,-92.23 118.23,-163.35 214.92,-180.47z"/>
+  </svg>
+);
+
+// Кастомная иконка Max (Мессенджер)
 const MaxIcon = ({ size = 24, className = "" }: { size?: number, className?: string }) => (
   <svg 
     xmlns="http://www.w3.org/2000/svg" 
@@ -57,54 +75,95 @@ export const Footer: React.FC = () => {
 
   return (
     <>
-      <footer className="bg-leather-900 text-leather-200 py-10 border-t border-leather-800">
+      <footer className="bg-[#14110f] text-stone-300 py-12 border-t border-stone-800/80">
         <div className="container mx-auto px-6">
           <div className="flex flex-col md:flex-row justify-between items-center gap-8">
             
-            {/* Brand */}
+            {/* Брендинг / Логотип */}
             <div className="text-center md:text-left flex items-center gap-4">
-              <div className="text-leather-300 opacity-80">
-                  <Logo variant="page" className="w-20 h-20 md:w-36 md:h-36" />
+              <div className="text-[#e6ccb2]/80 hover:text-[#e6ccb2] transition-colors cursor-pointer">
+                <Logo variant="page" className="w-24 h-24 md:w-32 md:h-32 drop-shadow-md" />
               </div>
             </div>
 
-            {/* Links */}
+            {/* Полезные ссылки */}
             <div className="flex flex-col md:flex-row gap-6 md:gap-12 text-center md:text-left">
-                <div className="flex flex-col gap-3">
-                    <h4 className="text-white text-xs uppercase tracking-widest font-bold">Информация</h4>
-                    <button 
-                        onClick={() => openModal('Доставка и Оплата', DELIVERY_INFO)}
-                        className="text-sm hover:text-white transition-colors text-left"
-                    >
-                        Доставка и оплата
-                    </button>
-                    <button 
-                        onClick={() => openModal('Гарантия и Возврат', WARRANTY_INFO)}
-                        className="text-sm hover:text-white transition-colors text-left"
-                    >
-                        Гарантия качества
-                    </button>
-                    <button 
-                        onClick={() => openModal('Уход за изделиями', CARE_INFO)}
-                        className="text-sm hover:text-white transition-colors text-left"
-                    >
-                        Уход за кожей
-                    </button>
-                </div>
+              <div className="flex flex-col gap-2.5">
+                <h4 className="text-[#e6ccb2] text-[11px] font-mono uppercase tracking-[0.2em] font-bold mb-1">
+                  Информация
+                </h4>
+                <button 
+                  onClick={() => openModal('Доставка и Оплата', DELIVERY_INFO)}
+                  className="text-xs text-stone-400 hover:text-stone-100 transition-colors text-center md:text-left"
+                >
+                  Доставка и оплата
+                </button>
+                <button 
+                  onClick={() => openModal('Гарантия и Возврат', WARRANTY_INFO)}
+                  className="text-xs text-stone-400 hover:text-stone-100 transition-colors text-center md:text-left"
+                >
+                  Гарантия качества
+                </button>
+                <button 
+                  onClick={() => openModal('Уход за изделиями', CARE_INFO)}
+                  className="text-xs text-stone-400 hover:text-stone-100 transition-colors text-center md:text-left"
+                >
+                  Уход за кожей
+                </button>
+              </div>
             </div>
 
-            {/* Socials & Copyright */}
-            <div className="flex flex-col items-center md:items-end gap-4">
-                <div className="flex gap-6 items-center">
-                    <a href="https://vk.com/club238936761" target="_blank" rel="noreferrer" className="hover:text-white transition-colors" title="ВКонтакте"><VkIcon size={24} className="translate-y-[1.5px]" /></a>
-                    <a href="https://dzen.ru/id/680b7e950637d556531bf3d6" target="_blank" rel="noreferrer" className="hover:text-white transition-colors" title="Дзен"><DzenIcon size={24} className="translate-y-[1px]" /></a>
-                    <a href={CONTACT_CONFIG.MESSENGER_URL} target="_blank" rel="noreferrer" className="hover:text-[#2AABEE] transition-colors" title={CONTACT_CONFIG.MESSENGER_LABEL}><MaxIcon size={24} className="translate-y-[1px]" /></a>
-                </div>
-                <div className="text-sm text-center md:text-right">
-                    <p>&copy; {new Date().getFullYear()} BSV Leather Workshop.</p>
-                    <p className="mt-1 text-xs text-leather-400">Ручная работа. Характер. Качество.</p>
-                </div>
+            {/* Соцсети и копирайт */}
+            <div className="flex flex-col items-center md:items-end gap-3.5">
+              <div className="flex gap-5 items-center text-stone-400">
+                <a 
+                  href="https://vk.com/club238936761" 
+                  target="_blank" 
+                  rel="noreferrer" 
+                  className="hover:text-[#e6ccb2] transition-colors p-1" 
+                  title="ВКонтакте"
+                >
+                  <VkIcon size={22} className="translate-y-[1.5px]" />
+                </a>
+                <a 
+                  href="https://dzen.ru/id/680b7e950637d556531bf3d6" 
+                  target="_blank" 
+                  rel="noreferrer" 
+                  className="hover:text-[#e6ccb2] transition-colors p-1" 
+                  title="Дзен"
+                >
+                  <DzenIcon size={22} className="translate-y-[1px]" />
+                </a>
+                <a 
+                  href="https://www.instagram.com/bsvleather/" 
+                  target="_blank" 
+                  rel="noreferrer" 
+                  className="hover:text-[#e6ccb2] transition-colors p-1" 
+                  title="Instagram"
+                >
+                  <InstagramIcon size={22} className="translate-y-[1px]" />
+                </a>
+                <a 
+                  href={CONTACT_CONFIG.MESSENGER_URL} 
+                  target="_blank" 
+                  rel="noreferrer" 
+                  className="hover:text-[#e6ccb2] transition-colors p-1" 
+                  title={CONTACT_CONFIG.MESSENGER_LABEL}
+                >
+                  <MaxIcon size={22} className="translate-y-[1px]" />
+                </a>
+              </div>
+
+              <div className="text-center md:text-right">
+                <p className="text-xs font-medium text-stone-200">
+                  &copy; {new Date().getFullYear()} BSV Leather Workshop.
+                </p>
+                <p className="mt-1 text-[11px] text-stone-500 font-light">
+                  Ручная работа. Характер. Качество.
+                </p>
+              </div>
             </div>
+
           </div>
         </div>
       </footer>

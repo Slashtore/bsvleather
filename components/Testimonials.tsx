@@ -10,7 +10,7 @@ export const Testimonials: React.FC<TestimonialsProps> = ({ onBecomeClient }) =>
     {
       id: 1,
       name: "Александр К.",
-      product: "Ремень \"Классический\"",
+      product: "Ремень \"Форма\"",
       text: "Кожа плотная, с приятным матовым финишем. Ношу каждый день — потёртостей нет. Пряжка держит чётко, не люфтит. Отличный ремень.",
       rating: 5,
       date: "20 декабря 2024"
@@ -18,7 +18,7 @@ export const Testimonials: React.FC<TestimonialsProps> = ({ onBecomeClient }) =>
     {
       id: 2,
       name: "Людмила К.",
-      product: "Ремень \"Классический\"",
+      product: "Ремень \"Форма\"",
       text: "Заказывала ярко-красный ремень. Видела подобный в онлайн бутике ГУМ, но стоимость... Цвет классный, насыщенный. Настоящая кожа. И цена приятная.",
       rating: 5,
       date: "25 декабря 2025"
@@ -60,7 +60,7 @@ export const Testimonials: React.FC<TestimonialsProps> = ({ onBecomeClient }) =>
     return () => window.removeEventListener('resize', check);
   }, []);
 
-  // 2. 🔥 МАТЕМАТИКА: замер → выравнивание → расчёт контейнера (только мобильные)
+  // 2. МАТЕМАТИКА: замер → выравнивание → расчёт контейнера (только мобильные)
   useLayoutEffect(() => {
     if (isDesktop || !trackRef.current) return;
 
@@ -96,7 +96,7 @@ export const Testimonials: React.FC<TestimonialsProps> = ({ onBecomeClient }) =>
     }
   };
 
-  // 🔥 ТОЧНЫЕ РАСЧЁТЫ
+  // ТОЧНЫЕ РАСЧЁТЫ
   const step = cardHeight + GAP;
   const containerHeight = cardHeight > 0 ? step * 3 : 'auto';
   
@@ -105,18 +105,28 @@ export const Testimonials: React.FC<TestimonialsProps> = ({ onBecomeClient }) =>
     : (cardHeight > 0 ? `translateY(-${currentIndex * step}px)` : `translateY(0px)`);
 
   return (
-    <section className="py-24 bg-leather-50 border-t border-leather-200">
+    <section className="py-20 md:py-24 bg-stone-100/60 border-t border-stone-200/80">
       <div className="container mx-auto px-6">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl font-serif text-leather-900 mb-4">Отзывы</h2>
-          <p className="text-leather-600 max-w-xl mx-auto">
-            Лучшая награда для мастера — это вещи, которые служат годами.
+        
+        {/* Шапка блока */}
+        <div className="text-center mb-12 md:mb-16">
+          <p className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#885036] font-bold mb-2">
+            Слово нашим владельцам
+          </p>
+          <h2 className="text-3xl md:text-5xl font-serif text-stone-950 mb-3 tracking-tight font-medium">
+            Отзывы
+          </h2>
+          <p className="text-stone-500 text-sm md:text-base font-light max-w-xl mx-auto">
+            Лучшая награда для мастера — это вещи, которые служат годами и раскрывают свой характер.
           </p>
         </div>
 
+        {/* Карусель отзывов */}
         <div 
           className="relative overflow-hidden"
           style={{ height: isDesktop ? 'auto' : containerHeight }}
+          onMouseEnter={() => setIsPaused(true)}
+          onMouseLeave={() => setIsPaused(false)}
         >
           <div
             ref={trackRef}
@@ -134,40 +144,40 @@ export const Testimonials: React.FC<TestimonialsProps> = ({ onBecomeClient }) =>
                 className={`${isDesktop ? 'w-1/3 px-4' : 'w-full py-4'} flex-shrink-0`}
                 style={!isDesktop && cardHeight > 0 ? { height: `${step}px` } : undefined}
               >
-                {/* 
-                  🔥 ДЕСКТОП: h-full заставляет карточку заполнить растянутую обёртку (flex stretch)
-                   МОБИЛЬНЫЙ: высота управляется JS, h-full не нужен
-                */}
                 <div 
                   data-card
-                  className={`bg-white p-8 rounded-sm shadow-sm hover:shadow-lg transition-shadow duration-300 relative border border-leather-200 flex flex-col min-h-0 ${isDesktop ? 'h-full' : ''}`}
+                  className={`bg-white p-6 md:p-8 rounded-sm shadow-sm hover:shadow-md transition-shadow duration-300 relative border border-stone-200/80 flex flex-col min-h-0 ${isDesktop ? 'h-full' : ''}`}
                   style={{ 
                     backfaceVisibility: 'hidden', 
                     WebkitBackfaceVisibility: 'hidden',
                     height: isDesktop ? undefined : cardHeight > 0 ? `${cardHeight}px` : 'auto'
                   }}
                 >
-                  <div className="absolute top-6 right-8 text-leather-200">
-                    <Quote size={48} className="transform rotate-180" />
+                  {/* Фоновая кавычка */}
+                  <div className="absolute top-6 right-6 text-stone-200/60 pointer-events-none">
+                    <Quote size={40} className="transform rotate-180" />
                   </div>
                   
-                  <div className="flex gap-1 mb-4 text-yellow-500">
+                  {/* Рейтинг */}
+                  <div className="flex gap-1 mb-4 text-amber-500">
                     {[...Array(review.rating)].map((_, i) => (
-                      <Star key={i} size={16} fill="currentColor" />
+                      <Star key={i} size={15} fill="currentColor" />
                     ))}
                   </div>
 
-                  <p className="text-leather-800 leading-relaxed mb-6 flex-grow italic break-words">
+                  {/* Текст отзыва */}
+                  <p className="text-stone-600 text-xs md:text-sm leading-relaxed mb-6 flex-grow italic font-light break-words">
                     "{review.text}"
                   </p>
 
-                  <div className="mt-auto pt-6 border-t border-leather-200">
+                  {/* Подвал карточки */}
+                  <div className="mt-auto pt-4 border-t border-stone-100">
                     <div className="flex justify-between items-end">
-                        <div>
-                            <p className="font-serif text-leather-900 font-bold text-lg">{review.name}</p>
-                            <p className="text-xs text-leather-500 uppercase tracking-wider mt-1">{review.product}</p>
-                        </div>
-                        <span className="text-xs text-leather-400">{review.date}</span>
+                      <div>
+                        <p className="font-serif text-stone-900 font-medium text-base">{review.name}</p>
+                        <p className="text-[10px] text-[#885036] font-mono font-bold uppercase tracking-widest mt-0.5">{review.product}</p>
+                      </div>
+                      <span className="text-xs text-stone-400 font-light">{review.date}</span>
                     </div>
                   </div>
                 </div>
@@ -176,14 +186,16 @@ export const Testimonials: React.FC<TestimonialsProps> = ({ onBecomeClient }) =>
           </div>
         </div>
         
+        {/* Кнопка "Стать клиентом" */}
         <div className="text-center mt-12">
-           <button 
-              onClick={onBecomeClient}
-              className="inline-block text-leather-600 border-b border-leather-400 pb-1 text-sm font-bold uppercase tracking-widest hover:text-leather-900 hover:border-leather-900 transition-colors"
-           >
-              Стать клиентом
-           </button>
+          <button 
+            onClick={onBecomeClient}
+            className="inline-block text-stone-700 hover:text-[#885036] border-b border-stone-400 hover:border-[#885036] pb-1 text-xs font-bold uppercase tracking-widest transition-all duration-300"
+          >
+            Стать клиентом
+          </button>
         </div>
+
       </div>
     </section>
   );

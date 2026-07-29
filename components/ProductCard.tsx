@@ -6,7 +6,7 @@ import { calculatePrice } from '../utils/calculatePrice';
 interface ProductCardProps {
   product: Product;
   onSelect: (product: Product) => void;
-  onAddToCart: () => void;
+  onAddToCart: (product: Product) => void;
 }
 
 export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelect, onAddToCart }) => {
@@ -49,23 +49,20 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelect, onA
     e.stopPropagation();
     setIsOverlayVisible(false);
     if (timerRef.current) clearTimeout(timerRef.current);
-    (onAddToCart as (p: Product) => void)(product);
+    onAddToCart(product);
   };
 
   return (
-    <div className="group bg-white flex flex-col h-full border border-leather-200 transition-all duration-300 hover:border-leather-400">
+    <div className="group bg-white flex flex-col h-full rounded-sm shadow-lg overflow-hidden transition-all duration-300 transform [@media(hover:hover)]:hover:-translate-y-2 [@media(hover:hover)]:hover:shadow-2xl">
+      
+      {/* ИЗОБРАЖЕНИЕ И ОВЕРЛЕЙ */}
       <div 
         onTouchEnd={handleTouchEnd}
-        className="relative overflow-hidden aspect-[4/5] bg-leather-50 cursor-pointer select-none"
+        className="relative overflow-hidden aspect-[4/5] bg-stone-100 cursor-pointer select-none"
       >
-        {/* 
-            🔥 АНИМАЦИЯ КАРТИНКИ:
-            Если isOverlayVisible === true (на мобилке) -> добавляется scale-105.
-            На ПК сохраняется [@media(hover:hover)]:group-hover:scale-105.
-        */}
         <img 
           src={product.imageUrl} 
-          alt={`${product.name} из натуральной кожи ручной работы — BSV Leather Воронеж`} 
+          alt={`${product.name} из натуральной кожи ручной работы — BSV Leather`} 
           className={`w-full h-full object-cover transition-transform duration-700 ${
             isOverlayVisible 
               ? 'scale-105' 
@@ -74,13 +71,15 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelect, onA
           loading="lazy"
         />
 
+        {/* Глубокий премиальный оверлей */}
         <div 
-          className={`absolute inset-0 transition-all duration-300 flex flex-col gap-3 items-center justify-center ${
+          className={`absolute inset-0 transition-all duration-300 flex flex-col gap-3 items-center justify-center p-4 ${
             isOverlayVisible 
-              ? 'bg-black/20 opacity-100 pointer-events-auto' 
-              : 'opacity-0 pointer-events-none [@media(hover:hover)]:group-hover:opacity-100 [@media(hover:hover)]:group-hover:bg-black/20 [@media(hover:hover)]:group-hover:pointer-events-auto'
+              ? 'bg-black/60 opacity-100 pointer-events-auto' 
+              : 'opacity-0 pointer-events-none [@media(hover:hover)]:group-hover:opacity-100 [@media(hover:hover)]:group-hover:bg-black/60 [@media(hover:hover)]:group-hover:pointer-events-auto'
           }`}
         >
+          {/* Кнопка "Подробнее" (без стрелки и переносов) */}
           <a 
             href={`/?product=${product.id}`}
             onClick={(e) => {
@@ -91,15 +90,16 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelect, onA
               e.preventDefault();
               handleSelectProduct(e);
             }}
-            className="bg-white text-leather-900 px-6 py-3 min-w-[140px] uppercase tracking-widest text-xs font-bold hover:bg-leather-900 hover:text-white transition-colors border border-white shadow-xl flex items-center justify-center text-center"
+            className="inline-flex items-center justify-center px-6 py-3 min-w-[150px] uppercase tracking-widest text-[10px] md:text-xs font-bold text-white transition-all duration-300 rounded-sm border border-white/60 hover:border-white bg-white/10 hover:bg-white/20 backdrop-blur-sm whitespace-nowrap text-center"
           >
             Подробнее
           </a>
           
+          {/* Кнопка "В корзину" */}
           <button 
             onClick={handleAddToCart}
             onTouchEnd={handleAddToCart}
-            className="bg-leather-900 text-white px-6 py-3 min-w-[140px] uppercase tracking-widest text-xs font-bold hover:bg-leather-800 transition-colors flex items-center justify-center gap-2 shadow-xl"
+            className="inline-flex items-center justify-center gap-2 px-6 py-3 min-w-[150px] uppercase tracking-widest text-[10px] md:text-xs font-bold transition-all duration-300 rounded-sm bg-[#1a110f] text-[#e6ccb2] hover:bg-stone-900 shadow-xl border border-stone-800 whitespace-nowrap text-center"
           >
             <ShoppingBag size={14} />
             В корзину
@@ -107,28 +107,33 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelect, onA
         </div>
       </div>
       
-      <div className="p-6 flex flex-col flex-grow">
-        <div className="flex justify-between items-start mb-2">
-           <div className="text-[10px] text-leather-500 font-bold uppercase tracking-widest border border-leather-200 px-2 py-0.5 inline-block">
-             {product.category}
-           </div>
-           {product.category === 'Эксклюзив и Арт' && (
-              <span className="w-2 h-2 rounded-full bg-leather-900"></span>
-           )}
+      {/* ТЕКСТОВАЯ ЧАСТЬ */}
+      <div className="p-6 flex flex-col flex-grow bg-white border-t border-stone-100">
+        
+        {/* Категория */}
+        <div className="flex justify-between items-start mb-3">
+            <div className="text-[9px] text-stone-500 font-medium uppercase tracking-[0.2em] bg-stone-100 px-2 py-0.5 rounded-sm">
+              {product.category}
+            </div>
+            {product.category === 'Эксклюзив и Арт' && (
+              <span className="w-2 h-2 rounded-full bg-amber-500" title="Эксклюзивное изделие"></span>
+            )}
         </div>
 
-        <h3 className="font-serif text-xl text-leather-900 mb-2 font-medium">{product.name}</h3>
+        {/* Название */}
+        <h3 className="font-serif text-2xl text-leather-950 mb-3 font-medium tracking-tight">{product.name}</h3>
         
-        <div className="flex justify-between items-center mt-auto pt-4 border-t border-leather-200">
-          <span className="font-bold text-leather-900 text-lg">
+        {/* Цена и кнопка "Плюс" */}
+        <div className="flex justify-between items-center mt-auto pt-5 border-t border-stone-100">
+          <span className="font-bold text-leather-950 text-xl tracking-tight">
             {displayPrice.toLocaleString('ru-RU')} ₽
           </span>
           <button 
             onClick={handleAddToCart}
-            className="text-leather-400 hover:text-leather-900 transition-colors p-2 hover:bg-leather-100 rounded-full"
+            className="group/plus text-stone-400 hover:text-leather-950 transition-colors p-2.5 bg-stone-100 hover:bg-[#e6ccb2]/20 rounded-full"
             title="Добавить в корзину"
           >
-            <Plus size={24} strokeWidth={1.5} />
+            <Plus size={24} strokeWidth={1} className="transition-transform duration-300 group-hover/plus:rotate-90" />
           </button>
         </div>
       </div>

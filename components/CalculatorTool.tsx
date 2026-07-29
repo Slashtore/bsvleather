@@ -1,8 +1,8 @@
 import React, { useState, useMemo } from 'react';
-import { Plus, Trash2, Calculator, Copy, Check } from 'lucide-react';
+import { Plus, Trash2, Calculator, Copy, Check, ArrowLeft, Layers, Wrench, Sparkles, Clock } from 'lucide-react';
 import { PRICING } from '../constants/pricing';
 
-//  Словари: ключ из pricing.ts → русское название
+// Словари: ключ из pricing.ts → русское название
 const LEATHER_NAMES: Record<string, string> = {
   dm: 'кв. дм',
   a4: 'Лист A4',
@@ -158,7 +158,7 @@ export const CalculatorTool = () => {
       `    • ${item.name} × ${item.qty} = ${(item.price * item.qty).toLocaleString('ru-RU')}₽`
     ).join('\n') || '    — нет —';
 
-    const text = `📦 РАСЧЁТ ЗАКАЗА (BSV)\n\n` +
+    const text = `📦 РАСЧЁТ ЗАКАЗА (BSV Leather)\n\n` +
       `📏 Материалы (Кожа):\n` +
       (leatherLines || '    — нет —') + `\n\n` +
       
@@ -182,42 +182,79 @@ export const CalculatorTool = () => {
 
   // --- ИНТЕРФЕЙС ---
   return (
-    <div className="min-h-screen bg-leather-50 py-8 px-4 pt-24 relative z-0">
+    <div className="min-h-screen bg-stone-100/60 py-10 px-4 pt-24 relative z-0">
       <div className="max-w-6xl mx-auto">
-        <div className="flex items-center justify-between mb-8">
-          <h1 className="text-3xl font-serif text-leather-900 flex items-center gap-3">
-            <Calculator size={32} /> Конструктор цены
+        
+        {/* Шапка калькулятора */}
+        <div className="flex items-center justify-between mb-8 pb-4 border-b border-stone-200/80">
+          <h1 className="text-2xl md:text-3xl font-serif text-stone-900 flex items-center gap-3 font-medium">
+            <Calculator size={28} className="text-[#885036]" /> 
+            Калькулятор стоимости заказа
           </h1>
-          {/* Кнопка "Выйти" убрана, так как пароль тоже убран. 
-              Можно вернуть ссылку на главную, если нужно: */}
-          <a href="/" className="text-sm text-leather-500 hover:text-leather-900 underline">
-            На главную
+          <a 
+            href="/" 
+            className="inline-flex items-center gap-1.5 text-xs text-stone-500 hover:text-stone-900 uppercase font-bold tracking-wider transition-colors"
+          >
+            <ArrowLeft size={14} />
+            <span>На главную</span>
           </a>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          
           {/* ЛЕВАЯ КОЛОНКА: НАСТРОЙКИ */}
           <div className="lg:col-span-2 space-y-6">
             
             {/* 1. КОЖА */}
-            <div className="bg-white p-6 rounded-sm shadow-md border-l-4 border-leather-800">
+            <div className="bg-white p-6 rounded-sm shadow-sm border-l-4 border-[#885036] border-t border-r border-b border-stone-200/80">
               <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-bold flex items-center gap-2"> Кожа</h3>
-                <button onClick={addLeather} className="flex items-center gap-1 text-xs text-leather-500 hover:text-leather-900 bg-leather-100 px-2 py-1 rounded">
+                <h3 className="text-base font-bold text-stone-900 flex items-center gap-2">
+                  <Layers size={18} className="text-[#885036]" /> Кожа
+                </h3>
+                <button 
+                  onClick={addLeather} 
+                  className="flex items-center gap-1 text-xs text-stone-700 hover:text-stone-950 bg-stone-100 hover:bg-stone-200 px-2.5 py-1.5 rounded-sm font-bold transition-colors"
+                >
                   <Plus size={14} /> Тип кожи
                 </button>
               </div>
+              
               <div className="space-y-3">
                 {leatherItems.map((item) => {
-                   const basePrice = PRICING.materials.leather[item.type as keyof typeof PRICING.materials.leather] || 0;
-                   return (
+                  const basePrice = PRICING.materials.leather[item.type as keyof typeof PRICING.materials.leather] || 0;
+                  return (
                     <div key={item.id} className="flex gap-2 items-center">
-                      <select className="flex-1 px-2 py-2 border border-leather-200 rounded-sm bg-leather-50 text-sm" value={item.type} onChange={e => updateLeather(item.id, 'type', e.target.value)}>
-                        {Object.keys(PRICING.materials.leather).map(key => <option key={key} value={key}>{LEATHER_NAMES[key] || key}</option>)}
+                      <select 
+                        className="flex-1 px-3 py-2 border border-stone-200 rounded-sm bg-stone-50 text-sm text-stone-800 focus:outline-none focus:border-stone-800" 
+                        value={item.type} 
+                        onChange={e => updateLeather(item.id, 'type', e.target.value)}
+                      >
+                        {Object.keys(PRICING.materials.leather).map(key => (
+                          <option key={key} value={key}>{LEATHER_NAMES[key] || key}</option>
+                        ))}
                       </select>
-                      <input type="number" min="0" step="0.1" className="w-16 px-2 py-2 border border-leather-200 rounded-sm bg-leather-50 text-sm" value={item.qty} onChange={e => updateLeather(item.id, 'qty', parseFloat(e.target.value) || 0)} />
-                      <input type="number" className="w-24 px-2 py-2 border border-leather-300 rounded-sm bg-yellow-50 text-sm focus:bg-white" placeholder={basePrice.toString()} value={item.priceOverride !== null ? item.priceOverride : ''} onChange={e => updateLeather(item.id, 'priceOverride', e.target.value === '' ? null : parseFloat(e.target.value))} />
-                      <button onClick={() => removeLeather(item.id)} className="p-2 text-red-400 hover:text-red-600"><Trash2 size={16} /></button>
+                      <input 
+                        type="number" 
+                        min="0" 
+                        step="0.1" 
+                        className="w-16 px-2.5 py-2 border border-stone-200 rounded-sm bg-stone-50 text-sm text-center font-bold" 
+                        value={item.qty} 
+                        onChange={e => updateLeather(item.id, 'qty', parseFloat(e.target.value) || 0)} 
+                      />
+                      <input 
+                        type="number" 
+                        className="w-28 px-3 py-2 border border-amber-200/80 rounded-sm bg-amber-50/60 text-sm focus:bg-white focus:outline-none focus:border-stone-800 font-mono" 
+                        placeholder={`${basePrice} ₽`} 
+                        value={item.priceOverride !== null ? item.priceOverride : ''} 
+                        onChange={e => updateLeather(item.id, 'priceOverride', e.target.value === '' ? null : parseFloat(e.target.value))} 
+                      />
+                      <button 
+                        onClick={() => removeLeather(item.id)} 
+                        className="p-2 text-stone-400 hover:text-red-600 transition-colors"
+                        title="Удалить"
+                      >
+                        <Trash2 size={16} />
+                      </button>
                     </div>
                   );
                 })}
@@ -225,24 +262,54 @@ export const CalculatorTool = () => {
             </div>
 
             {/* 2. ФУРНИТУРА */}
-            <div className="bg-white p-6 rounded-sm shadow-md border-l-4 border-leather-600">
+            <div className="bg-white p-6 rounded-sm shadow-sm border-l-4 border-stone-800 border-t border-r border-b border-stone-200/80">
               <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-bold flex items-center gap-2">🔩 Фурнитура</h3>
-                <button onClick={addHardware} className="flex items-center gap-1 text-xs text-leather-500 hover:text-leather-900 bg-leather-100 px-2 py-1 rounded">
+                <h3 className="text-base font-bold text-stone-900 flex items-center gap-2">
+                  <Wrench size={18} className="text-stone-700" /> Фурнитура
+                </h3>
+                <button 
+                  onClick={addHardware} 
+                  className="flex items-center gap-1 text-xs text-stone-700 hover:text-stone-950 bg-stone-100 hover:bg-stone-200 px-2.5 py-1.5 rounded-sm font-bold transition-colors"
+                >
                   <Plus size={14} /> Позиция
                 </button>
               </div>
+
               <div className="space-y-3">
                 {hardwareItems.map((item) => {
-                   const basePrice = PRICING.materials.hardware[item.type as keyof typeof PRICING.materials.hardware] || 0;
-                   return (
+                  const basePrice = PRICING.materials.hardware[item.type as keyof typeof PRICING.materials.hardware] || 0;
+                  return (
                     <div key={item.id} className="flex gap-2 items-center">
-                      <select className="flex-1 px-2 py-2 border border-leather-200 rounded-sm bg-leather-50 text-sm" value={item.type} onChange={e => updateHardware(item.id, 'type', e.target.value)}>
-                        {Object.keys(PRICING.materials.hardware).map(key => <option key={key} value={key}>{HARDWARE_NAMES[key] || key}</option>)}
+                      <select 
+                        className="flex-1 px-3 py-2 border border-stone-200 rounded-sm bg-stone-50 text-sm text-stone-800 focus:outline-none focus:border-stone-800" 
+                        value={item.type} 
+                        onChange={e => updateHardware(item.id, 'type', e.target.value)}
+                      >
+                        {Object.keys(PRICING.materials.hardware).map(key => (
+                          <option key={key} value={key}>{HARDWARE_NAMES[key] || key}</option>
+                        ))}
                       </select>
-                      <input type="number" min="0" className="w-16 px-2 py-2 border border-leather-200 rounded-sm bg-leather-50 text-sm" value={item.qty} onChange={e => updateHardware(item.id, 'qty', parseInt(e.target.value) || 0)} />
-                      <input type="number" className="w-24 px-2 py-2 border border-leather-300 rounded-sm bg-yellow-50 text-sm focus:bg-white" placeholder={basePrice.toString()} value={item.priceOverride !== null ? item.priceOverride : ''} onChange={e => updateHardware(item.id, 'priceOverride', e.target.value === '' ? null : parseFloat(e.target.value))} />
-                      <button onClick={() => removeHardware(item.id)} className="p-2 text-red-400 hover:text-red-600"><Trash2 size={16} /></button>
+                      <input 
+                        type="number" 
+                        min="0" 
+                        className="w-16 px-2.5 py-2 border border-stone-200 rounded-sm bg-stone-50 text-sm text-center font-bold" 
+                        value={item.qty} 
+                        onChange={e => updateHardware(item.id, 'qty', parseInt(e.target.value) || 0)} 
+                      />
+                      <input 
+                        type="number" 
+                        className="w-28 px-3 py-2 border border-amber-200/80 rounded-sm bg-amber-50/60 text-sm focus:bg-white focus:outline-none focus:border-stone-800 font-mono" 
+                        placeholder={`${basePrice} ₽`} 
+                        value={item.priceOverride !== null ? item.priceOverride : ''} 
+                        onChange={e => updateHardware(item.id, 'priceOverride', e.target.value === '' ? null : parseFloat(e.target.value))} 
+                      />
+                      <button 
+                        onClick={() => removeHardware(item.id)} 
+                        className="p-2 text-stone-400 hover:text-red-600 transition-colors"
+                        title="Удалить"
+                      >
+                        <Trash2 size={16} />
+                      </button>
                     </div>
                   );
                 })}
@@ -250,65 +317,155 @@ export const CalculatorTool = () => {
             </div>
 
             {/* 3. ДОП. УСЛУГИ */}
-            <div className="bg-white p-6 rounded-sm shadow-md border-l-4 border-[#2AABEE]">
+            <div className="bg-white p-6 rounded-sm shadow-sm border-l-4 border-amber-600 border-t border-r border-b border-stone-200/80">
               <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-bold flex items-center gap-2">✨ Доп. услуги</h3>
-                <button onClick={addCustomService} className="flex items-center gap-1 text-xs text-[#2AABEE] hover:text-blue-700 bg-blue-50 px-2 py-1 rounded">
+                <h3 className="text-base font-bold text-stone-900 flex items-center gap-2">
+                  <Sparkles size={18} className="text-amber-600" /> Доп. услуги / Кастомизация
+                </h3>
+                <button 
+                  onClick={addCustomService} 
+                  className="flex items-center gap-1 text-xs text-amber-900 bg-amber-100/80 hover:bg-amber-200 px-2.5 py-1.5 rounded-sm font-bold transition-colors"
+                >
                   <Plus size={14} /> Услуга
                 </button>
               </div>
+
               <div className="space-y-3">
                 {customServices.map((item) => (
                   <div key={item.id} className="flex gap-2 items-center">
-                    <input type="text" className="flex-1 px-2 py-2 border border-leather-200 rounded-sm bg-leather-50 text-sm" placeholder="Название" value={item.name} onChange={e => updateCustomService(item.id, 'name', e.target.value)} />
-                    <input type="number" min="0" className="w-16 px-2 py-2 border border-leather-200 rounded-sm bg-leather-50 text-sm" value={item.qty} onChange={e => updateCustomService(item.id, 'qty', parseInt(e.target.value) || 0)} />
-                    <input type="number" min="0" className="w-24 px-2 py-2 border border-leather-300 rounded-sm bg-yellow-50 text-sm focus:bg-white" placeholder="Цена" value={item.price} onChange={e => updateCustomService(item.id, 'price', parseFloat(e.target.value) || 0)} />
-                    <button onClick={() => removeCustomService(item.id)} className="p-2 text-red-400 hover:text-red-600"><Trash2 size={16} /></button>
+                    <input 
+                      type="text" 
+                      className="flex-1 px-3 py-2 border border-stone-200 rounded-sm bg-stone-50 text-sm focus:bg-white focus:outline-none focus:border-stone-800" 
+                      placeholder="Название услуги (гравировка, тиснение...)" 
+                      value={item.name} 
+                      onChange={e => updateCustomService(item.id, 'name', e.target.value)} 
+                    />
+                    <input 
+                      type="number" 
+                      min="0" 
+                      className="w-16 px-2.5 py-2 border border-stone-200 rounded-sm bg-stone-50 text-sm text-center font-bold" 
+                      value={item.qty} 
+                      onChange={e => updateCustomService(item.id, 'qty', parseInt(e.target.value) || 0)} 
+                    />
+                    <input 
+                      type="number" 
+                      min="0" 
+                      className="w-28 px-3 py-2 border border-amber-200/80 rounded-sm bg-amber-50/60 text-sm focus:bg-white focus:outline-none focus:border-stone-800 font-mono" 
+                      placeholder="Цена" 
+                      value={item.price} 
+                      onChange={e => updateCustomService(item.id, 'price', parseFloat(e.target.value) || 0)} 
+                    />
+                    <button 
+                      onClick={() => removeCustomService(item.id)} 
+                      className="p-2 text-stone-400 hover:text-red-600 transition-colors"
+                      title="Удалить"
+                    >
+                      <Trash2 size={16} />
+                    </button>
                   </div>
                 ))}
               </div>
             </div>
 
             {/* 4. РАБОТА */}
-            <div className="bg-white p-6 rounded-sm shadow-md border-l-4 border-green-600">
-              <h3 className="text-lg font-bold mb-4 flex items-center gap-2">⏱ Работа</h3>
-              <div className="grid grid-cols-2 gap-4">
-                <input type="number" min="0" step="0.5" placeholder="Часы" className="px-3 py-2 border border-leather-200 rounded-sm bg-leather-50" value={laborHours || ''} onChange={e => setLaborHours(parseFloat(e.target.value) || 0)} />
-                <div className="relative">
-                  <span className="absolute left-3 top-2 text-xs text-gray-400">Ставка/час</span>
-                  <input type="number" className="w-full px-3 pt-5 pb-2 border border-leather-300 rounded-sm bg-yellow-50 focus:bg-white" value={laborRateOverride !== null ? laborRateOverride : ''} placeholder={(PRICING.materials.labor.per_hour || 0).toString()} onChange={e => setLaborRateOverride(e.target.value === '' ? null : parseFloat(e.target.value))} />
+            <div className="bg-white p-6 rounded-sm shadow-sm border-l-4 border-emerald-700 border-t border-r border-b border-stone-200/80">
+              <h3 className="text-base font-bold text-stone-900 mb-4 flex items-center gap-2">
+                <Clock size={18} className="text-emerald-700" /> Время работы мастера
+              </h3>
+              
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-[10px] font-bold uppercase tracking-wider text-stone-500 mb-1">
+                    Затраченное время (часы)
+                  </label>
+                  <input 
+                    type="number" 
+                    min="0" 
+                    step="0.5" 
+                    placeholder="Например: 3.5" 
+                    className="w-full px-3 py-2 border border-stone-200 rounded-sm bg-stone-50 text-sm font-bold focus:bg-white focus:outline-none focus:border-stone-800" 
+                    value={laborHours || ''} 
+                    onChange={e => setLaborHours(parseFloat(e.target.value) || 0)} 
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-[10px] font-bold uppercase tracking-wider text-stone-500 mb-1">
+                    Ставка в час (руб/час)
+                  </label>
+                  <input 
+                    type="number" 
+                    className="w-full px-3 py-2 border border-amber-200/80 rounded-sm bg-amber-50/60 text-sm font-mono focus:bg-white focus:outline-none focus:border-stone-800" 
+                    value={laborRateOverride !== null ? laborRateOverride : ''} 
+                    placeholder={`${PRICING.materials.labor.per_hour || 0} ₽/ч`} 
+                    onChange={e => setLaborRateOverride(e.target.value === '' ? null : parseFloat(e.target.value))} 
+                  />
                 </div>
               </div>
             </div>
 
           </div>
 
-          {/* ПРАВАЯ КОЛОНКА: ИТОГ */}
-          <div className="bg-leather-900 text-white p-6 rounded-sm shadow-md flex flex-col justify-between sticky top-8 h-fit">
+          {/* ПРАВАЯ КОЛОНКА: ИТОГОВАЯ СМЕТА */}
+          <div className="bg-[#1a110f] text-stone-100 p-6 rounded-sm shadow-xl flex flex-col justify-between sticky top-8 h-fit border border-stone-800">
+            
             <div className="space-y-4">
-              <h3 className="text-xl font-serif border-b border-leather-700 pb-3">Расчёт стоимости</h3>
-              <div className="space-y-2 text-sm">
-                <div className="flex justify-between"><span>Кожа:</span><span>{result.leatherTotal.toLocaleString('ru-RU')} ₽</span></div>
-                <div className="flex justify-between"><span>Фурнитура:</span><span>{result.hardwareTotal.toLocaleString('ru-RU')} ₽</span></div>
-                <div className="flex justify-between"><span>Услуги:</span><span>{result.servicesTotal.toLocaleString('ru-RU')} ₽</span></div>
-                <div className="flex justify-between"><span>Работа:</span><span>{result.laborTotal.toLocaleString('ru-RU')} ₽</span></div>
-                <div className="flex justify-between"><span>Расходники:</span><span>{result.consumables.toLocaleString('ru-RU')} ₽</span></div>
-                <div className="border-t border-leather-700 pt-2 mt-4 flex justify-between font-bold text-lg">
-                  <span>Итого:</span><span>{result.total.toLocaleString('ru-RU')} ₽</span>
+              <h3 className="text-xl font-serif text-[#e6ccb2] border-b border-stone-800 pb-3 font-medium">
+                Расчёт стоимости
+              </h3>
+
+              <div className="space-y-2.5 text-xs text-stone-300 font-light">
+                <div className="flex justify-between">
+                  <span>Кожа:</span>
+                  <span className="font-mono text-stone-100">{result.leatherTotal.toLocaleString('ru-RU')} ₽</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Фурнитура:</span>
+                  <span className="font-mono text-stone-100">{result.hardwareTotal.toLocaleString('ru-RU')} ₽</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Доп. услуги:</span>
+                  <span className="font-mono text-stone-100">{result.servicesTotal.toLocaleString('ru-RU')} ₽</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Работа мастера:</span>
+                  <span className="font-mono text-stone-100">{result.laborTotal.toLocaleString('ru-RU')} ₽</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Расходники:</span>
+                  <span className="font-mono text-stone-100">{result.consumables.toLocaleString('ru-RU')} ₽</span>
+                </div>
+
+                <div className="border-t border-stone-800 pt-3 mt-4 flex justify-between font-bold text-sm text-stone-200">
+                  <span>Себестоимость:</span>
+                  <span className="font-mono">{result.total.toLocaleString('ru-RU')} ₽</span>
                 </div>
               </div>
             </div>
-            <div className="mt-6 space-y-3">
-              <div className="bg-[#2AABEE]/20 p-4 rounded-sm text-center border border-[#2AABEE]/50">
-                <p className="text-xs uppercase tracking-wider text-[#2AABEE] mb-1">К оплате клиенту</p>
-                <p className="text-4xl font-bold text-white">{result.roundedTotal.toLocaleString('ru-RU')} ₽</p>
+
+            <div className="mt-8 space-y-3">
+              {/* Блок цены для клиента */}
+              <div className="bg-stone-900/90 p-4 rounded-sm text-center border border-[#e6ccb2]/30 shadow-inner">
+                <p className="text-[10px] uppercase tracking-widest text-stone-400 mb-1 font-mono">
+                  К оплате клиенту
+                </p>
+                <p className="text-3xl font-serif font-bold text-[#e6ccb2]">
+                  {result.roundedTotal.toLocaleString('ru-RU')} ₽
+                </p>
               </div>
-              <button onClick={copyResult} className="w-full py-3 bg-[#2AABEE] hover:bg-[#229ED9] text-white font-bold uppercase tracking-wider text-sm rounded-sm flex items-center justify-center gap-2 transition-colors">
-                {copied ? <Check size={18} /> : <Copy size={18} />}
-                {copied ? 'Скопировано!' : 'Скопировать для клиента'}
+
+              {/* Кнопка копирования */}
+              <button 
+                onClick={copyResult} 
+                className="w-full py-3.5 bg-[#885036] hover:bg-[#a06042] text-white font-bold uppercase tracking-wider text-xs rounded-sm flex items-center justify-center gap-2 transition-all shadow-md border border-stone-700"
+              >
+                {copied ? <Check size={16} /> : <Copy size={16} />}
+                <span>{copied ? 'Смета скопирована!' : 'Скопировать смету для клиента'}</span>
               </button>
             </div>
+
           </div>
+
         </div>
       </div>
     </div>

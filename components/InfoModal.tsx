@@ -12,31 +12,40 @@ export const InfoModal: React.FC<InfoModalProps> = ({ isOpen, onClose, title, co
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-[80] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
-      <div className="bg-white w-full max-w-lg rounded-sm shadow-2xl relative flex flex-col max-h-[90vh]">
+    <div className="fixed inset-0 z-[80] flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-fade-in-down">
+      <div className="bg-white w-full max-w-lg rounded-sm shadow-2xl relative flex flex-col max-h-[85vh] border border-stone-200/80">
+        
+        {/* Кнопка закрытия */}
         <button 
           onClick={onClose}
-          className="absolute top-4 right-4 p-2 hover:bg-leather-100 rounded-full transition-colors text-leather-800"
+          className="absolute top-4 right-4 p-2 hover:bg-stone-100 rounded-full transition-colors text-stone-500 hover:text-stone-900"
+          aria-label="Закрыть"
         >
-          <X size={24} />
+          <X size={20} />
         </button>
 
-        <div className="p-8 border-b border-leather-200">
-          <h3 className="text-2xl font-serif text-leather-900">{title}</h3>
+        {/* Заголовок модалки */}
+        <div className="p-6 md:p-8 border-b border-stone-200/80 pr-12">
+          <h3 className="text-xl md:text-2xl font-serif text-stone-900 font-medium tracking-tight">
+            {title}
+          </h3>
         </div>
 
-        <div className="p-8 overflow-y-auto text-leather-800 leading-relaxed whitespace-pre-wrap">
-            {content}
+        {/* Содержимое статьи */}
+        <div className="p-6 md:p-8 overflow-y-auto text-stone-600 text-xs md:text-sm leading-relaxed font-light whitespace-pre-wrap">
+          {content}
         </div>
         
-        <div className="p-6 border-t border-leather-200 bg-leather-50 rounded-b-sm">
-            <button 
-                onClick={onClose}
-                className="w-full bg-leather-800 text-white py-3 uppercase tracking-widest text-xs font-bold hover:bg-leather-700 transition-colors"
-            >
-                Понятно
-            </button>
+        {/* Нижняя плашка с кнопкой */}
+        <div className="p-4 md:p-6 border-t border-stone-200/80 bg-stone-50 rounded-b-sm">
+          <button 
+            onClick={onClose}
+            className="w-full bg-[#1a110f] text-[#e6ccb2] py-3.5 uppercase tracking-widest text-xs font-bold hover:bg-stone-900 transition-all rounded-sm border border-stone-800 shadow-md"
+          >
+            Понятно
+          </button>
         </div>
+
       </div>
     </div>
   );

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Helmet, HelmetProvider } from 'react-helmet-async'; // ← ИМПОРТИРУЕМ HELMET
+import { Helmet, HelmetProvider } from 'react-helmet-async';
 
 import { Header } from './components/Header';
 import { Hero } from './components/Hero';
@@ -7,6 +7,7 @@ import { ProductGrid } from './components/ProductGrid';
 import { CategoryPreview } from './components/CategoryPreview';
 import { Materials } from './components/Materials';
 import { MaterialsCatalog } from './components/MaterialsCatalog';
+import { Patina } from './components/Patina';
 import { CareSection } from './components/CareSection';
 import { HelpCenter } from './components/HelpCenter';
 import { Customization } from './components/Customization';
@@ -95,7 +96,7 @@ function AppContent() {
     window.scrollTo(0, 0);
   };
 
-  const handleAddToCart = (product: Product) => {
+  const handleAddToCart = (product: Product, personalization?: string) => {
     const rawPrice = product.price;
     const hasRecipe = !!product.recipe && !!(product.recipe as any).leather;
     
@@ -111,15 +112,23 @@ function AppContent() {
       finalPrice = 0;
     }
 
+    const finalProductName = personalization 
+      ? `${product.name} [${personalization}]` 
+      : product.name;
+
+    const cartItemId = personalization ? `${product.id}-${personalization}` : product.id;
+
     setCartItems(prev => {
-      const existing = prev.find(item => item.id === product.id);
+      const existing = prev.find(item => item.id === cartItemId);
       if (existing) {
         return prev.map(item => 
-          item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
+          item.id === cartItemId ? { ...item, quantity: item.quantity + 1 } : item
         );
       }
       return [...prev, { 
         ...product, 
+        id: cartItemId,
+        name: finalProductName,
         price: finalPrice,
         quantity: 1 
       }];
@@ -177,19 +186,19 @@ function AppContent() {
 
   const cartCount = cartItems.reduce((acc, item) => acc + item.quantity, 0);
 
-  // 🔥 ДИНАМИЧЕСКИЕ ДАННЫЕ SEO В ЗАВИСИМОСТИ ОТ ТЕКУЩЕГО ЭКРАНА
+  // ДИНАМИЧЕСКИЕ ДАННЫЕ SEO В ЗАВИСИМОСТИ ОТ ТЕКУЩЕГО ЭКРАНА
   const getSeoData = () => {
     switch (currentView) {
       case 'catalog':
         return {
           title: 'Каталог изделий из кожи ручной работы — BSV Leather Воронеж',
-          description: 'Авторские ремни, кошельки, картхолдеры и аксессуары из натуральной кожи растительного табления. Изготовление на заказ в Воронеже.',
+          description: 'Авторские ремни, кошельки, картхолдеры и аксессуары из натуральной кожи растительного дубления. Изготовление на заказ в Воронеже.',
           url: 'https://bsvleather.ru/#catalog',
         };
       case 'materials-catalog':
         return {
           title: 'Каталог кожи и материалов — BSV Leather',
-          description: 'Натуральная кожа растительного и хромового табления, итальская фурнитура и прочные нити, которые мы используем в производстве.',
+          description: 'Натуральная кожа растительного и хромового дубления, итальянская фурнитура и прочные нити, которые мы используем в производстве.',
           url: 'https://bsvleather.ru/',
         };
       case 'calc':
@@ -217,8 +226,8 @@ function AppContent() {
   const seo = getSeoData();
 
   return (
-    <div className="min-h-screen bg-leather-50">
-      {/* 🔥 ДИНАМИЧЕСКИЕ ТЕГИ ДЛЯ СТРАНИЦЫ */}
+    <div className="min-h-screen bg-stone-100/40 text-stone-900 selection:bg-[#885036] selection:text-white font-sans antialiased">
+      {/* ДИНАМИЧЕСКИЕ ТЕГИ ДЛЯ СТРАНИЦЫ */}
       <Helmet>
         <title>{seo.title}</title>
         <meta name="description" content={seo.description} />
@@ -256,8 +265,10 @@ function AppContent() {
             <Materials 
               onOpenCatalog={() => navigateTo('materials-catalog')} 
             />
+
+            <Patina />
             
-            <CareSection onAddToCart={handleAddToCart} />
+            <CareSection onAddToCart={(product) => handleAddToCart(product)} />
             
             <Customization 
               onOrderClick={() => handleContactAction('Заказ 3D макета (Визуализация)', 'Здравствуйте! Хочу заказать 3D макет изделия.')} 
@@ -322,7 +333,7 @@ function AppContent() {
   );
 }
 
-// 🔥 КОРНЕВОЙ ЭКСПОРТ С HELMET PROVIDER
+// КОРНЕВОЙ ЭКСПОРТ С HELMET PROVIDER
 export default function App() {
   return (
     <HelmetProvider>

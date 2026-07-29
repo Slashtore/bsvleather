@@ -18,8 +18,8 @@ export const Logo: React.FC<LogoProps> = ({
   return (
     <img 
       src={src} 
-      alt="Логотип Бокун" 
-      className={className + " object-contain block"} 
+      alt="Логотип BSV Leather" 
+      className={`${className} object-contain block`} 
     />
   );
 };

@@ -1,70 +1,91 @@
 import React from 'react';
 import { Hammer, Scissors, Feather } from 'lucide-react';
 
-// Custom Thread/Wave Icon representing the stitching thread
-const ThreadWave: React.FC<{ size?: number; className?: string }> = ({ size = 24, className = "" }) => (
+// Кастомная иконка шорной иглы с нитью из векторного исходника
+const NeedleThread: React.FC<{ size?: number; className?: string }> = ({ size = 28, className = "" }) => (
   <svg 
-    xmlns="http://www.w3.org/2000/svg" 
     width={size} 
     height={size} 
-    viewBox="0 0 24 24" 
+    viewBox="0 0 626 626" 
     fill="none" 
-    stroke="currentColor" 
-    strokeWidth="2" 
-    strokeLinecap="round" 
-    strokeLinejoin="round" 
+    xmlns="http://www.w3.org/2000/svg"
     className={className}
   >
-    <path d="M3 20V7a3 3 0 0 1 6 0v10a3 3 0 0 0 6 0V7a3 3 0 0 1 6 0v13" />
+    <path 
+      fill="currentColor" 
+      d="M 406.60 0.00 L 416.42 0.00 C 426.38 1.39 436.33 3.98 445.26 8.72 C 461.18 16.53 474.06 29.52 483.78 44.17 C 489.58 53.74 494.33 64.09 496.49 75.12 C 503.21 101.15 502.35 128.44 499.39 154.96 C 496.06 178.41 490.55 201.49 483.96 224.22 C 496.92 230.51 509.23 238.32 519.45 248.56 C 536.70 265.91 550.33 286.52 561.92 307.98 C 569.37 320.29 575.12 333.51 581.47 346.40 C 585.84 357.10 590.94 367.52 594.62 378.50 C 596.50 384.05 600.53 389.70 598.75 395.79 C 597.04 402.18 587.94 403.99 583.31 399.70 C 580.64 396.67 579.54 392.65 577.98 389.00 C 571.05 369.66 562.33 351.04 553.41 332.55 C 538.38 304.33 522.51 275.22 497.34 254.67 C 491.48 250.04 484.93 246.37 478.26 243.04 C 474.55 252.07 472.10 261.55 468.47 270.61 C 458.12 299.86 445.60 328.26 434.37 357.17 C 431.98 363.56 429.23 369.82 427.50 376.45 C 423.90 385.59 422.17 395.29 419.42 404.69 C 416.49 419.69 413.64 434.77 412.87 450.05 C 412.04 467.93 412.43 486.09 416.71 503.55 C 418.92 514.64 422.77 525.53 428.89 535.09 C 431.58 539.32 435.61 542.40 439.16 545.84 C 443.10 549.62 442.55 557.02 438.10 560.17 C 434.45 562.15 429.56 562.41 426.13 559.79 C 413.22 549.99 406.08 534.78 401.13 519.75 C 398.65 510.43 396.11 501.07 395.13 491.45 C 393.36 475.37 392.79 459.10 394.35 442.97 C 394.89 428.11 398.05 413.57 400.99 399.05 C 404.66 384.49 408.67 369.96 414.19 355.97 C 428.38 318.62 444.99 282.17 457.22 244.09 C 458.20 240.79 460.19 237.63 460.27 234.15 C 452.44 229.32 443.83 225.86 436.02 220.99 C 425.70 215.56 415.93 209.18 406.24 202.72 C 400.42 198.53 394.90 193.96 389.05 189.82 C 363.49 221.36 338.41 253.31 313.03 285.01 C 227.00 393.00 140.94 500.97 54.93 608.99 C 50.72 614.09 47.02 619.67 41.97 624.01 C 40.75 625.04 39.21 625.55 37.70 626.00 L 30.52 626.00 C 27.39 621.18 25.04 614.82 28.73 609.59 C 128.36 450.97 227.98 292.34 327.58 133.69 C 331.79 126.01 336.88 118.87 341.54 111.48 C 343.24 109.38 342.26 106.69 342.01 104.30 C 340.08 87.90 342.83 71.45 346.63 55.53 C 348.03 51.57 349.52 47.64 350.88 43.67 C 356.89 29.60 366.31 16.38 379.77 8.64 C 387.82 3.54 397.28 1.35 406.60 0.00 M 398.93 21.14 C 388.34 24.05 379.53 31.67 373.89 40.95 C 365.17 54.95 361.69 71.59 361.24 87.92 C 365.64 83.37 370.49 79.22 375.78 75.75 C 385.03 68.84 396.86 64.39 408.50 66.39 C 419.37 68.70 429.53 75.91 433.67 86.46 C 437.14 95.86 435.90 106.15 433.76 115.69 C 427.28 137.17 414.90 156.24 401.48 174.00 L 401.68 174.87 C 419.07 189.40 438.69 200.97 458.75 211.38 C 461.25 212.82 463.83 214.13 466.59 215.01 C 467.99 208.52 470.55 202.34 471.81 195.81 C 473.21 188.57 475.45 181.51 476.75 174.25 C 478.38 164.17 480.14 154.11 481.41 143.97 C 482.64 131.70 482.81 119.34 482.23 107.02 C 481.32 99.35 481.04 91.54 478.72 84.10 C 474.91 61.95 461.90 41.23 442.69 29.27 C 429.81 21.47 413.81 16.53 398.93 21.14 M 394.54 87.83 C 389.18 88.09 384.78 91.54 380.84 94.83 C 374.26 101.46 368.78 109.12 364.24 117.25 C 364.00 120.78 365.74 124.04 366.85 127.30 C 370.30 137.19 375.64 146.35 381.98 154.66 C 392.61 143.57 403.02 131.89 410.09 118.15 C 412.37 112.50 414.75 106.11 412.83 100.01 C 411.03 92.08 402.43 86.83 394.54 87.83 M 351.64 143.04 C 347.66 153.65 343.22 164.11 340.02 175.00 C 337.47 182.59 334.76 190.15 332.98 197.97 C 344.97 188.42 356.75 178.59 367.95 168.13 C 365.12 164.52 362.47 160.78 359.90 156.98 C 356.72 152.59 355.10 147.26 351.64 143.04 Z" 
+    />
   </svg>
 );
 
 export const Process: React.FC = () => {
   const steps = [
     {
-      icon: <Scissors size={32} />,
+      icon: <Scissors size={28} strokeWidth={1.5} />,
       title: "Раскрой",
-      desc: "Точный крой по лекалам из цельного куска шкуры (чепрака)."
+      desc: "Точный ручной раскрой по лекалам из лучших участков цельного чепрака или полукожи."
     },
     {
-      icon: <Hammer size={32} />,
+      icon: <Hammer size={28} strokeWidth={1.5} />,
       title: "Пробивка",
-      desc: "Создание отверстий для будущего шва строчными пробойниками."
+      desc: "Формирование отверстий под будущий шов просечными пробойниками под нужный шаг."
     },
     {
-      icon: <ThreadWave size={32} />,
+      icon: <NeedleThread size={32} />,
       title: "Сшивание",
-      desc: "Ручной седельный шов двумя иглами навстречу друг другу. Гарантия вечной прочности."
+      desc: "Ручной седельный шов двумя иглами навстречу друг другу. Безупречная прочность и долговечность."
     },
     {
-      icon: <Feather size={32} />,
+      icon: <Feather size={28} strokeWidth={1.5} />,
       title: "Обработка",
-      desc: "Полировка урезов (краев) воском и деревянным сликкером до зеркального блеска."
+      desc: "Шлифовка и полировка урезов (краёв) воском и деревянным сликкером до зеркального блеска."
     }
   ];
 
   return (
-    <section id="process" className="py-24 bg-white">
-       <div className="container mx-auto px-6">
-         <div className="text-center mb-16">
-            <h2 className="text-4xl font-serif text-leather-900 mb-4">Процесс создания</h2>
-            <p className="text-leather-700 max-w-xl mx-auto font-medium">
-              Магия превращения грубой кожи в изящный аксессуар.
-            </p>
-         </div>
-         
-         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
-            {steps.map((step, idx) => (
-              <div key={idx} className="flex flex-col items-center text-center group">
-                <div className="w-20 h-20 rounded-full bg-leather-50 border border-leather-200 flex items-center justify-center text-leather-800 mb-6 group-hover:bg-leather-800 group-hover:text-white transition-all duration-500 transform group-hover:rotate-12 shadow-sm">
-                  {step.icon}
-                </div>
-                <h3 className="text-xl font-serif font-bold text-leather-900 mb-3">{step.title}</h3>
-                <p className="text-leather-700 leading-relaxed text-sm">{step.desc}</p>
+    <section id="process" className="py-20 md:py-24 bg-white border-t border-stone-200/80">
+      <div className="container mx-auto px-6">
+        
+        {/* Шапка блока */}
+        <div className="text-center mb-16">
+          <p className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#885036] font-bold mb-2">
+            Ремесло и ручной труд
+          </p>
+          <h2 className="text-3xl md:text-5xl font-serif text-stone-900 mb-3 tracking-tight font-medium">
+            Процесс создания
+          </h2>
+          <p className="text-stone-500 text-sm md:text-base font-light max-w-xl mx-auto">
+            От отбора листа кожи растительного дубления до финишной полировки натуральным воском
+          </p>
+        </div>
+        
+        {/* Сетка шагов */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-10">
+          {steps.map((step, idx) => (
+            <div key={idx} className="flex flex-col items-center text-center group relative">
+              
+              {/* Порядковый номер этапа */}
+              <span className="text-[10px] font-mono font-bold text-[#885036] uppercase tracking-widest mb-3">
+                0{idx + 1} // этап
+              </span>
+
+              {/* Круглая иконка */}
+              <div className="w-20 h-20 rounded-full bg-stone-100/80 border border-stone-200/80 flex items-center justify-center text-[#885036] mb-6 group-hover:bg-[#1a110f] group-hover:text-[#e6ccb2] group-hover:border-stone-900 transition-all duration-500 transform group-hover:scale-105 shadow-sm">
+                {step.icon}
               </div>
-            ))}
-         </div>
-       </div>
+
+              {/* Заголовок и описание */}
+              <h3 className="text-lg md:text-xl font-serif font-medium text-stone-900 mb-2 group-hover:text-[#885036] transition-colors">
+                {step.title}
+              </h3>
+              <p className="text-stone-600 leading-relaxed text-xs md:text-sm font-light max-w-xs">
+                {step.desc}
+              </p>
+            </div>
+          ))}
+        </div>
+
+      </div>
     </section>
   );
 };
