@@ -17,6 +17,7 @@ export const PRICING = {
       rivet: 10,             // заклёпка
       zipper: 100,           // молния
       screw: 40,             // винт
+      holder: 200,           // купюродержатель
       // Добавляй новую фурнитуру сюда:
       // d_ring: 100,
     } as const,

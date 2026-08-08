@@ -17,6 +17,7 @@ const HARDWARE_NAMES: Record<string, string> = {
   rivet: 'Заклёпка',
   zipper: 'Молния',
   screw: 'Винт',
+  holder: 'Купюродержатель',
 };
 
 // 🔧 Типы данных
