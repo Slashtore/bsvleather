@@ -12,7 +12,7 @@ export const Hero: React.FC<HeroProps> = ({ onNavigate }) => {
     <section className="relative h-screen w-full overflow-hidden flex items-center justify-center bg-[#14110f]">
       {/* 1. Атмосферный задний фон с текстурой */}
       <div 
-        className="absolute inset-0 z-0 opacity-35 transform scale-105 transition-transform duration-10000 ease-out"
+        className="absolute inset-0 z-0 opacity-100 transform scale-105 transition-transform duration-10000 ease-out"
         style={{
           backgroundImage: `url(${HERO_IMAGE})`,
           backgroundPosition: 'center',
@@ -21,7 +21,7 @@ export const Hero: React.FC<HeroProps> = ({ onNavigate }) => {
       />
       
       {/* 2. Градиентные виньетки для читаемости текста */}
-      <div className="absolute inset-0 z-0 bg-gradient-to-b from-black/80 via-black/40 to-[#14110f]" />
+      <div className="absolute inset-0 z-0 bg-gradient-to-b from-black/40 via-black/40 to-[#14110f]" />
       <div className="absolute inset-0 z-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-transparent via-black/30 to-black/80" />
 
       {/* 3. Основной контент */}
@@ -36,7 +36,7 @@ export const Hero: React.FC<HeroProps> = ({ onNavigate }) => {
         <div className="flex items-center gap-3 mb-3">
           <span className="w-8 h-px bg-[#e6ccb2]/40" />
           <span className="text-[#e6ccb2]/80 font-mono text-[11px] md:text-xs uppercase tracking-[0.3em]">
-            Ручная работа • Италия & Россия
+            Ручная работа • Россия
           </span>
           <span className="w-8 h-px bg-[#e6ccb2]/40" />
         </div>
